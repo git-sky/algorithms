@@ -1,9 +1,9 @@
 package cn.com.sky.algorithms.offer;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.Random;
-
-import org.junit.Test;
 
 /**
  * <pre>
@@ -20,12 +20,15 @@ public class ReplaceSpace {
 		char[] source = init();
 
 		System.out.println(Arrays.toString(source));
+        System.out.println(new String(source));
 
 		char[] result = convert(source);
 
 		System.out.println(Arrays.toString(result));
+        System.out.println(new String(result));
 
-	}
+
+    }
 
 	public char[] convert(char[] arr) {
 		System.out.println("length:" + arr.length);

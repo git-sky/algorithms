@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.interview;
+package cn.com.sky.algorithms.interview.linkedlist;
 
 /**
  * 单链表逆转(有头结点)

@@ -61,6 +61,7 @@ public class QuickSort {
 			}
 			System.out.println(" 趟");
 		} while (i < j);// 如果两边扫描的下标交错，完成一次排序 　　
+
 		if (left < j)
 			Sort(pData, left, j); // 递归调用 　　
 		if (right > i)

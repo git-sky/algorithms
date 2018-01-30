@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.interview;
+package cn.com.sky.algorithms.interview.linkedlist;
 
 import org.junit.Test;
 

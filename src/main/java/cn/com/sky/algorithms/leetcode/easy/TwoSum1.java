@@ -9,6 +9,8 @@ import org.junit.Test;
 /**
  * <pre>
  * 
+ * 1. Two Sum
+ * 
  * Given an array of integers, return indices of the two numbers such that they add up to a specific target.
  * 
  * You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -32,18 +34,41 @@ public class TwoSum1 {
 		System.out.println(Arrays.toString(sum));
 	}
 
-	public int[] twoSum(int[] numbers, int target) {
-		int[] result = new int[2];
-		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-		for (int i = 0; i < numbers.length; i++) {
-			if (map.containsKey(target - numbers[i])) {
-				result[1] = i;
-				result[0] = map.get(target - numbers[i]);
-				return result;
+//	public int[] twoSum(int[] nums, int target) {
+//		Map<Integer, Integer> map = new HashMap<>();
+//		for (int i = 0; i < nums.length; i++) {
+//			map.put(nums[i], i);
+//		}
+//		for (int i = 0; i < nums.length; i++) {
+//			int complement = target - nums[i];
+//			if (map.containsKey(complement) && map.get(complement) != i) {
+//				return new int[] { i, map.get(complement) };
+//			}
+//		}
+//		throw new IllegalArgumentException("No two sum solution");
+//	}
+//
+//	public int[] twoSum(int[] nums, int target) {
+//		Map<Integer, Integer> map = new HashMap<>();
+//		for (int i = 0; i < nums.length; i++) {
+//			int complement = target - nums[i];
+//			if (map.containsKey(complement)) {
+//				return new int[] { map.get(complement), i };
+//			}
+//			map.put(nums[i], i);
+//		}
+//		throw new IllegalArgumentException("No two sum solution");
+//	}
+
+	public int[] twoSum(int[] nums, int target) {
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i + 1; j < nums.length; j++) {
+				if (nums[j] == target - nums[i]) {
+					return new int[] { i, j };
+				}
 			}
-			map.put(numbers[i], i);
 		}
-		return result;
+		throw new IllegalArgumentException("No two sum solution");
 	}
 
 }

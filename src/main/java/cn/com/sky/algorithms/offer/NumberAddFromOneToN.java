@@ -1,8 +1,8 @@
 package cn.com.sky.algorithms.offer;
 
-import java.util.Random;
-
 import org.junit.Test;
+
+import java.util.Random;
 
 /**
  * <pre>
@@ -29,6 +29,9 @@ public class NumberAddFromOneToN {
 
 	}
 
+	/**
+     * 递归可以实现循环的功能.
+	 */
 	public boolean add(int n) {
 		sum += n;
 		return (n > 0) && add(n - 1);

@@ -24,7 +24,6 @@ public class TestSelectSort extends AbstractSort {
 				if (arr[min] > arr[j]) {
 					min = j;
 				}
-
 				count++;
 			}
 

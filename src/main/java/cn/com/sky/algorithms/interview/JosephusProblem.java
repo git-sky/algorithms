@@ -13,4 +13,5 @@ package cn.com.sky.algorithms.interview;
  */
 public class JosephusProblem {
 
+
 }

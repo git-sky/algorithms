@@ -8,6 +8,8 @@ import cn.com.sky.algorithms.sorting.AbstractSort;
  * 冒泡排序
  * 
  * n个关键字，最多n-1趟循环，每个关键字最多n-1次比较.
+ * 
+ * 从小到大排序： 两种思路：1、小的上浮（从后向前遍历）；2、大的下沉(从前向后遍历)
  */
 public class TestBubbleSort extends AbstractSort {
 

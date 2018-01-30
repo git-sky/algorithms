@@ -14,7 +14,7 @@ import java.util.Arrays;
  * 注意：①堆中任一子树亦是堆 。②以上讨论的堆实际上是二叉堆（Binary Heap），类似地可定义k叉堆。
  * 
  * 时间复杂度 O(N*logN)。 由于建初始堆所需的比较次数较多，所以堆排序不适宜于记录数较少的文件。 堆排序是就地排序，辅助空间为O(1）。
- * 它是不稳定的排序方法。（排序的稳定性是指如果在排序的序列中，存在前后相同的两个元素的话，排序前 和排序后他们的相对位置不发生变化）。
+ * 它是不稳定的排序方法。（排序的稳定性是指如果在排序的序列中，存在前后相同的两个元素的话，排序前和排序后他们的相对位置不发生变化）。
  * 
  * </pre>
  * 
@@ -24,14 +24,16 @@ public class HeapSort {
 
 	public static void main(String[] args) {
 
-		System.out.println(Arrays.toString(sort));
+		System.out.println("初始数组："+Arrays.toString(sort));
 
 		buildMaxHeapify(sort);
+
 		heapSort(sort);
+
 		print(sort);
 
 		System.out.println();
-		System.out.println(Arrays.toString(sort));
+		System.out.println("排序后数组："+Arrays.toString(sort));
 	}
 
 	private static void buildMaxHeapify(int[] data) {
@@ -47,9 +49,9 @@ public class HeapSort {
 	 * 创建最大堆
 	 *
 	 * @param data
-	 * @param heapSize需要创建最大堆的大小
+	 * @param heapSize 需要创建最大堆的大小
 	 *            ，一般在sort的时候用到，因为最多值放在末尾，末尾就不再归入最大堆了
-	 * @param index当前需要创建最大堆的位置
+	 * @param index 当前需要创建最大堆的位置
 	 */
 	private static void maxHeapify(int[] data, int heapSize, int index) {
 		// 当前点与左右子节点比较
