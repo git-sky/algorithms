@@ -13,6 +13,7 @@ import org.junit.Test;
  * 
  * Follow up:
  * If this function is called many times, how would you optimize it?
+ * 
  * Related problem: Reverse Integer
  * 
  * </pre>
@@ -28,8 +29,28 @@ public class ReverseBits190 {
 		System.out.println(count);
 	}
 
-	// you need treat n as an unsigned value
 	public int reverseBits(int n) {
+		int result = 0;
+		for (int i = 0; i < 32; i++) {
+			result += n & 1;
+			n >>>= 1; // CATCH: must do unsigned shift
+			if (i < 31) // CATCH: for last digit, don't shift!
+				result <<= 1;
+		}
+		return result;
+	}
 
+	public int reverseBits(int n) {
+		int result = 0;
+		for (int i = 0; i < 32; i++) {
+			result <<= 1;
+			result += n & 1;
+			n >>= 1;
+		}
+		return result;
+	}
+
+	public int reverseBits(int n) {
+		return Integer.reverse(n);
 	}
 }
