@@ -1,124 +1,180 @@
 package cn.com.sky.algorithms.interview.string;
 
 /**
- * 字符串匹配【Medium】
+ * <pre>
+ * 字符串匹配算法 - KMP算法【Hard】（字节跳动高频）
  * 
- * 在文本字符串中查找模式字符串出现的次数。
+ * 题目描述：在主串S中查找模式串P的第一次出现位置。
  * 
- * 算法原理（KMP算法）：
- * KMP算法通过预处理模式串生成最长前缀后缀数组(LPS)，避免不必要的回溯：
- * 1. 预处理阶段：构建LPS数组
- *    - LPS[i]表示模式串前i+1个字符的最长相等前缀和后缀长度
- * 2. 匹配阶段：
- *    - 使用双指针遍历文本和模式
- *    - 如果字符匹配，同时移动两个指针
- *    - 如果不匹配，利用LPS数组回溯模式指针
+ * KMP算法原理：
+ * 1. 预处理模式串P，构建部分匹配表（最长前缀后缀数组）
+ * 2. 使用双指针遍历主串和模式串
+ * 3. 当字符不匹配时，利用部分匹配表跳过不必要的比较
  * 
- * 时间复杂度：O(N + M)，N为文本长度，M为模式长度
- * 空间复杂度：O(M)
+ * 部分匹配表（next数组）：
+ * - next[i]表示P[0..i]的最长相等前后缀长度
+ * - 例如："ABABC"的next数组为[0,0,1,2,0]
+ * 
+ * 时间复杂度：O(n + m)，n为主串长度，m为模式串长度
+ * 空间复杂度：O(m)
+ * 
+ * 相比暴力匹配的O(n*m)，KMP在最坏情况下有显著优势
+ * </pre>
  */
 public class StringFind {
 
     public static void main(String[] args) {
-        StringFind solution = new StringFind();
+        StringFind kmp = new StringFind();
         
         // 测试用例1：正常匹配
-        System.out.println("测试用例1: " + solution.kmpContains("abcabcabx", "abc")); // 2
+        String s1 = "ABABDABACDABABCABAB";
+        String p1 = "ABABCABAB";
+        System.out.println("测试用例1: " + kmp.kmpSearch(s1, p1)); // 10
         
-        // 测试用例2：模式在开头
-        System.out.println("测试用例2: " + solution.kmpContains("abcdefg", "abc")); // 1
+        // 测试用例2：模式串在开头
+        String s2 = "ABCDEFG";
+        String p2 = "ABC";
+        System.out.println("测试用例2: " + kmp.kmpSearch(s2, p2)); // 0
         
-        // 测试用例3：模式在结尾
-        System.out.println("测试用例3: " + solution.kmpContains("abcdefg", "efg")); // 1
+        // 测试用例3：模式串在结尾
+        String s3 = "HELLOWORLD";
+        String p3 = "LD";
+        System.out.println("测试用例3: " + kmp.kmpSearch(s3, p3)); // 8
         
-        // 测试用例4：多次匹配
-        System.out.println("测试用例4: " + solution.kmpContains("aaaaa", "aa")); // 4
+        // 测试用例4：模式串不存在
+        String s4 = "ABCDEFG";
+        String p4 = "XYZ";
+        System.out.println("测试用例4: " + kmp.kmpSearch(s4, p4)); // -1
         
-        // 测试用例5：不匹配
-        System.out.println("测试用例5: " + solution.kmpContains("abcdefg", "xyz")); // 0
+        // 测试用例5：模式串等于主串
+        String s5 = "TEST";
+        String p5 = "TEST";
+        System.out.println("测试用例5: " + kmp.kmpSearch(s5, p5)); // 0
         
-        // 测试用例6：模式等于文本
-        System.out.println("测试用例6: " + solution.kmpContains("hello", "hello")); // 1
+        // 测试用例6：模式串比主串长
+        String s6 = "ABC";
+        String p6 = "ABCD";
+        System.out.println("测试用例6: " + kmp.kmpSearch(s6, p6)); // -1
         
-        // 测试用例7：模式大于文本
-        System.out.println("测试用例7: " + solution.kmpContains("hi", "hello")); // 0
+        // 测试用例7：空串
+        System.out.println("测试用例7(空模式串): " + kmp.kmpSearch("ABC", "")); // 0
+        System.out.println("测试用例7(空主串): " + kmp.kmpSearch("", "ABC")); // -1
         
-        // 测试用例8：空字符串
-        System.out.println("测试用例8: " + solution.kmpContains("", "a")); // 0
-        System.out.println("测试用例8: " + solution.kmpContains("abc", "")); // 0
-        
-        // 测试用例9：特殊字符
-        System.out.println("测试用例9: " + solution.kmpContains("abababa", "aba")); // 3
+        // 测试用例8：重复模式
+        String s8 = "AAAAA";
+        String p8 = "AA";
+        System.out.println("测试用例8: " + kmp.kmpSearch(s8, p8)); // 0
     }
 
     /**
-     * KMP算法查找模式串出现次数
+     * KMP字符串匹配
      * 
-     * @param text    文本字符串
-     * @param pattern 模式字符串
-     * @return 模式串出现的次数
+     * @param text 主串
+     * @param pattern 模式串
+     * @return 匹配位置，未找到返回-1
      */
-    public int kmpContains(String text, String pattern) {
-        if (text == null || pattern == null || text.length() < pattern.length()) {
+    public int kmpSearch(String text, String pattern) {
+        if (pattern == null || pattern.isEmpty()) {
             return 0;
         }
+        if (text == null || text.isEmpty()) {
+            return -1;
+        }
         
-        char[] tArray = text.toCharArray();
-        char[] pArray = pattern.toCharArray();
+        int n = text.length();
+        int m = pattern.length();
         
-        int[] lps = computeLPSArray(pArray);
-        int count = 0;
+        if (m > n) {
+            return -1;
+        }
+        
+        // 构建部分匹配表
+        int[] next = buildNext(pattern);
+        
+        int i = 0; // 主串指针
         int j = 0; // 模式串指针
         
-        for (int i = 0; i < tArray.length; i++) {
-            // 如果不匹配，回溯模式指针
-            while (j > 0 && tArray[i] != pArray[j]) {
-                j = lps[j - 1];
-            }
-            
-            // 如果匹配，移动模式指针
-            if (tArray[i] == pArray[j]) {
+        while (i < n) {
+            if (pattern.charAt(j) == text.charAt(i)) {
+                i++;
                 j++;
             }
             
-            // 如果模式串完全匹配
-            if (j == pArray.length) {
-                count++;
-                // 继续查找下一个匹配（不重叠）
-                j = lps[j - 1];
-            }
-        }
-        
-        return count;
-    }
-
-    /**
-     * 计算最长前缀后缀数组(LPS)
-     * 
-     * @param pattern 模式串字符数组
-     * @return LPS数组
-     */
-    private int[] computeLPSArray(char[] pattern) {
-        int n = pattern.length;
-        int[] lps = new int[n];
-        int len = 0; // 当前最长相等前后缀长度
-        
-        for (int i = 1; i < n; ) {
-            if (pattern[i] == pattern[len]) {
-                len++;
-                lps[i] = len;
-                i++;
-            } else {
-                if (len != 0) {
-                    // 回溯到前一个可能的匹配位置
-                    len = lps[len - 1];
+            if (j == m) {
+                // 找到匹配，返回起始位置
+                return i - j;
+            } else if (i < n && pattern.charAt(j) != text.charAt(i)) {
+                // 不匹配时利用next数组回溯
+                if (j != 0) {
+                    j = next[j - 1];
                 } else {
-                    lps[i] = 0;
                     i++;
                 }
             }
         }
         
-        return lps;
+        // 未找到匹配
+        return -1;
+    }
+
+    /**
+     * 构建部分匹配表（next数组）
+     * 
+     * @param pattern 模式串
+     * @return next数组
+     */
+    private int[] buildNext(String pattern) {
+        int m = pattern.length();
+        int[] next = new int[m];
+        int len = 0; // 当前最长相等前后缀长度
+        
+        for (int i = 1; i < m; ) {
+            if (pattern.charAt(i) == pattern.charAt(len)) {
+                len++;
+                next[i] = len;
+                i++;
+            } else {
+                if (len != 0) {
+                    // 回溯到上一个可能的前缀
+                    len = next[len - 1];
+                } else {
+                    next[i] = 0;
+                    i++;
+                }
+            }
+        }
+        
+        return next;
+    }
+
+    /**
+     * 暴力匹配算法（对比用）
+     * 
+     * @param text 主串
+     * @param pattern 模式串
+     * @return 匹配位置，未找到返回-1
+     */
+    public int bruteForceSearch(String text, String pattern) {
+        if (pattern == null || pattern.isEmpty()) {
+            return 0;
+        }
+        if (text == null || text.isEmpty()) {
+            return -1;
+        }
+        
+        int n = text.length();
+        int m = pattern.length();
+        
+        for (int i = 0; i <= n - m; i++) {
+            int j = 0;
+            while (j < m && text.charAt(i + j) == pattern.charAt(j)) {
+                j++;
+            }
+            if (j == m) {
+                return i;
+            }
+        }
+        
+        return -1;
     }
 }

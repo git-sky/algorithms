@@ -1,131 +1,77 @@
-//package cn.com.sky.algorithms.leetcode.easy;
-//
-//import java.util.Stack;
-//
-///**
-// * <pre>
-// *
-// * 155. Min Stack
-// *
-// * Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
-// *
-// * push(x) -- Push element x onto stack.
-// * pop() -- Removes the element on top of the stack.
-// * top() -- Get the top element.
-// * getMin() -- Retrieve the minimum element in the stack.
-// *
-// * Example:
-// * MinStack minStack = new MinStack();
-// * minStack.push(-2);
-// * minStack.push(0);
-// * minStack.push(-3);
-// * minStack.getMin();   --> Returns -3.
-// * minStack.pop();
-// * minStack.top();      --> Returns 0.
-// * minStack.getMin();   --> Returns -2.
-// *
-// *
-// *
-// * </pre>
-// */
-//public class MinStack155 {
-//
-//}
-//
-//class MinStack {
-//	long min;
-//	Stack<Long> stack;
-//
-//	public MinStack() {
-//		stack = new Stack<>();
-//	}
-//
-//	public void push(int x) {
-//		if (stack.isEmpty()) {
-//			stack.push(0L);
-//			min = x;
-//		} else {
-//			stack.push(x - min);// Could be negative if min value needs to change
-//			if (x < min)
-//				min = x;
-//		}
-//	}
-//
-//	public void pop() {
-//		if (stack.isEmpty())
-//			return;
-//
-//		long pop = stack.pop();
-//
-//		if (pop < 0)
-//			min = min - pop;// If negative, increase the min value
-//
-//	}
-//
-//	public int top() {
-//		long top = stack.peek();
-//		if (top > 0) {
-//			return (int) (top + min);
-//		} else {
-//			return (int) (min);
-//		}
-//	}
-//
-//	public int getMin() {
-//		return (int) min;
-//	}
-//}
-//
-//
-//class MinStack {
-//    int min = Integer.MAX_VALUE;
-//    Stack<Integer> stack = new Stack<Integer>();
-//    public void push(int x) {
-//        // only push the old minimum value when the current
-//        // minimum value changes after pushing the new value x
-//        if(x <= min){
-//            stack.push(min);
-//            min=x;
-//        }
-//        stack.push(x);
-//    }
-//
-//    public void pop() {
-//        // if pop operation could result in the changing of the current minimum value,
-//        // pop twice and change the current minimum value to the last minimum value.
-//        if(stack.pop() == min) min=stack.pop();
-//    }
-//
-//    public int top() {
-//        return stack.peek();
-//    }
-//
-//    public int getMin() {
-//        return min;
-//    }
-//}
-//
-//class MinStack {
-//    Stack<Integer> min = new Stack<>();
-//    Stack<Integer> stack = new Stack<>();
-//    public void push(int x) {
-//        stack.push(x);
-//        if (min.isEmpty() || min.peek() >= x) {
-//            min.push(x);
-//        }
-//    }
-//
-//    public void pop() {
-//        if (stack.pop().equals(min.peek())) {
-//            min.pop();
-//        }
-//    }
-//
-//    public int top() {
-//        return stack.peek();
-//    }
-//
-//    public int getMin() {
-//        return min.peek();
-//    }
-//}
+package cn.com.sky.algorithms.leetcode.easy;
+
+import java.util.Stack;
+
+/**
+ * <pre>
+ * LeetCode 155. 最小栈【Easy】（字节跳动高频）
+ * 
+ * 题目描述：设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
+ * 
+ * push(x) -- 将元素 x 推入栈中。
+ * pop() -- 删除栈顶的元素。
+ * top() -- 获取栈顶元素。
+ * getMin() -- 检索栈中的最小元素。
+ * 
+ * 算法原理（双栈法）：
+ * 1. 使用一个主栈存储所有元素
+ * 2. 使用一个辅助栈（最小栈）存储当前最小值
+ * 3. 每次 push 时，若新元素小于等于最小栈顶，则同时压入最小栈
+ * 4. 每次 pop 时，若弹出的是最小值，则同时弹出最小栈顶
+ * 
+ * 时间复杂度：O(1)（所有操作）
+ * 空间复杂度：O(n)
+ * </pre>
+ */
+public class MinStack155 {
+
+    public static void main(String[] args) {
+        MinStack minStack = new MinStack();
+        minStack.push(-2);
+        minStack.push(0);
+        minStack.push(-3);
+        System.out.println("getMin: " + minStack.getMin()); // --> 返回 -3.
+        minStack.pop();
+        System.out.println("top: " + minStack.top());      // --> 返回 0.
+        System.out.println("getMin: " + minStack.getMin()); // --> 返回 -2.
+        
+        // 额外测试用例
+        minStack.push(-5);
+        System.out.println("getMin after push -5: " + minStack.getMin()); // --> 返回 -5
+        minStack.pop();
+        System.out.println("getMin after pop -5: " + minStack.getMin()); // --> 返回 -2
+    }
+}
+
+class MinStack {
+    Stack<Integer> stack;   // 主栈：存储所有元素
+    Stack<Integer> minStack; // 辅助栈：存储当前最小值
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+    public void push(int x) {
+        stack.push(x);
+        // 若最小栈为空或新元素小于等于当前最小值，则压入最小栈
+        if (minStack.isEmpty() || x <= minStack.peek()) {
+            minStack.push(x);
+        }
+    }
+
+    public void pop() {
+        // 若弹出的是当前最小值，则同时弹出最小栈顶
+        if (stack.pop().equals(minStack.peek())) {
+            minStack.pop();
+        }
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return minStack.peek();
+    }
+}

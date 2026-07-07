@@ -24,10 +24,10 @@ import java.util.Map;
  * 时间复杂度：O(1)（所有操作）
  * 空间复杂度：O(capacity)
  */
-public class LRUCache146 {
+public class LruCache146 {
 
     public static void main(String[] args) {
-        LRUCache146 cache = new LRUCache146(2);
+        LruCache146 cache = new LruCache146(2);
         
         // 测试用例1：正常操作
         cache.put(1, 1);
@@ -63,7 +63,7 @@ public class LRUCache146 {
     private int capacity;
     private int size;
 
-    public LRUCache146(int capacity) {
+    public LruCache146(int capacity) {
         this.capacity = capacity;
         this.size = 0;
         this.map = new HashMap<>();

@@ -3,122 +3,177 @@ package cn.com.sky.algorithms.searching.dynamics.skiplist;
 import java.util.Random;
 
 /**
- * 跳表
+ * <pre>
+ * 跳表（Skip List）【Medium】
  * 
- * 说明： JumpList是一个按照值的大小有序排列的链表
+ * 算法原理：
+ * 1. 基于链表的数据结构，通过增加索引层来加速查找
+ * 2. 每一层都是一个有序链表
+ * 3. 查找时从顶层开始，逐层向下
+ * 4. 插入时随机决定节点的层数
+ * 
+ * 时间复杂度（平均）：
+ * - 查找：O(log n)
+ * - 插入：O(log n)
+ * - 删除：O(log n)
+ * 空间复杂度：O(n)（平均O(n log n)）
+ * 
+ * 适用场景：
+ * - 需要快速插入、删除、查找的场景
+ * - Redis中的有序集合实现
+ * </pre>
  */
 public class JumpList {
-	private final int MAXN = 100;
-	public JumpNode head = new JumpNode(MAXN); // 存放各层链表的第一个对象的用
-	public JumpNode tail = new JumpNode(MAXN); // 各层链表结尾都要指向该引用
-	public JumpNode[] pres = new JumpNode[MAXN]; // 插入、删除操作前要在该数组中存入待插入或删除元素前趋节点的引用
-	public int levels; // 链表层数
+    private final int MAX_LEVEL = 16;
+    private JumpNode head = new JumpNode(MAX_LEVEL);
+    private JumpNode tail = new JumpNode(1);
+    private JumpNode[] pres = new JumpNode[MAX_LEVEL];
+    private int levels = 0;
+    private Random rand = new Random();
 
-	public JumpList() {
-		tail = new JumpNode(1);
-		for (int i = 0; i < MAXN; i++) {
-			head.nextLinks[i] = tail; // 初始指向tail
-			pres[i] = head;
-		}
-		levels = 0;
-	}
+    public JumpList() {
+        tail.value = Integer.MAX_VALUE;
+        for (int i = 0; i < MAX_LEVEL; i++) {
+            head.nextLinks[i] = tail;
+            pres[i] = head;
+        }
+        levels = 0;
+    }
 
-	/*
-	 * 功能： 根据给定的元素，获取其前驱节点(x在链表中)或x应插入位置在各层链表中的前驱节点的引用
-	 */
-	public void updatePresRef(int x) {
-		for (int i = 0; i <= levels; i++) {// 这里要注意：i应<=levels，不应<，否则会有一个bug
-			JumpNode p = head;
-			while (p.nextLinks[i].value < x) {
-				p = p.nextLinks[i];
-			}
-			pres[i] = p;
-		}
-	}
+    /**
+     * 更新前驱节点引用数组
+     */
+    private void updatePresRef(int x) {
+        for (int i = levels; i >= 0; i--) {
+            JumpNode p = head;
+            while (p.nextLinks[i].value < x) {
+                p = p.nextLinks[i];
+            }
+            pres[i] = p;
+        }
+    }
 
-	/*
-	 * 功能：对于新增节点根据概率随机分配其nextLinks数组的大小
-	 */
-	public int getLevel() {
-		Random rand = new Random();
-		int lev = 0;
-		while (rand.nextInt() <= Integer.MAX_VALUE / 2) {// 以1/2的概率进入循环，每循环一次相当于乘一次1/2
-			++lev; // 高度增加1
-			if (lev >= MAXN) { // 限制lev的无限增加
-				lev = MAXN - 1;
-				break;
-			}
-		}
-		if (lev > levels) { // 减少空层浪费
-			lev = levels++;
-		}
-		return lev;
-	}
+    /**
+     * 随机生成节点层数（几何分布，概率1/2）
+     */
+    private int getLevel() {
+        int lev = 0;
+        while (rand.nextBoolean()) {
+            lev++;
+            if (lev >= MAX_LEVEL - 1) {
+                break;
+            }
+        }
+        if (lev > levels) {
+            lev = ++levels;
+        }
+        return lev;
+    }
 
-	/*
-	 * 功能：将元素x插入JumpList中，采用无则插入，有则放弃的原则
-	 */
-	public void insertElement(int x) {
-		updatePresRef(x);
-		if (pres[0].nextLinks[0].value == x) {
-			return; // x已存在，返回
-		}
-		int lev = getLevel();
-		JumpNode node = new JumpNode(lev + 1);
-		node.value = x;
-		for (int i = 0; i <= lev; i++) {
-			node.nextLinks[i] = pres[i].nextLinks[i];
-			pres[i].nextLinks[i] = node;
-		}
-	}
+    /**
+     * 插入元素（无则插入，有则忽略）
+     */
+    public void insertElement(int x) {
+        updatePresRef(x);
+        if (pres[0].nextLinks[0].value == x) {
+            return;
+        }
 
-	// 删除操作：有则删，无则不变
-	public void deleteElement(int x) {
-		updatePresRef(x);
-		if (pres[0].nextLinks[0].value != x) {
-			return; // x不存在，返回
-		}
+        int lev = getLevel();
+        JumpNode node = new JumpNode(lev + 1);
+        node.value = x;
 
-		for (int i = 0; pres[i].nextLinks[i].value == x; i++) {
-			pres[i].nextLinks[i] = pres[i].nextLinks[i].nextLinks[i];
-		}
-	}
+        for (int i = 0; i <= lev; i++) {
+            node.nextLinks[i] = pres[i].nextLinks[i];
+            pres[i].nextLinks[i] = node;
+        }
+    }
 
-	public void display() {
-		JumpNode p = head.nextLinks[0];
-		while (p != tail) {
-			System.out.print(p.value + " ");
-			p = p.nextLinks[0];
-		}
-		System.out.println();
-	}
+    /**
+     * 删除元素（有则删，无则不变）
+     */
+    public void deleteElement(int x) {
+        updatePresRef(x);
+        if (pres[0].nextLinks[0].value != x) {
+            return;
+        }
 
-	public static void main(String[] args) {
-		JumpList jl = new JumpList();
-		jl.insertElement(10);
-		jl.insertElement(4);
-		jl.insertElement(5);
-		jl.insertElement(7);
-		jl.display();
-		jl.deleteElement(1);
-		jl.display();
-		jl.deleteElement(7);
-		jl.display();
-	}
+        for (int i = 0; i <= levels && pres[i].nextLinks[i].value == x; i++) {
+            pres[i].nextLinks[i] = pres[i].nextLinks[i].nextLinks[i];
+        }
+    }
+
+    /**
+     * 查找元素
+     */
+    public boolean searchElement(int x) {
+        JumpNode p = head;
+        for (int i = levels; i >= 0; i--) {
+            while (p.nextLinks[i].value < x) {
+                p = p.nextLinks[i];
+            }
+        }
+        return p.nextLinks[0].value == x;
+    }
+
+    /**
+     * 显示底层链表
+     */
+    public void display() {
+        JumpNode p = head.nextLinks[0];
+        while (p != tail) {
+            System.out.print(p.value + " ");
+            p = p.nextLinks[0];
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        JumpList jl = new JumpList();
+
+        // 测试用例1：基本插入
+        System.out.println("=== 测试用例1：基本插入 ===");
+        jl.insertElement(10);
+        jl.insertElement(4);
+        jl.insertElement(5);
+        jl.insertElement(7);
+        jl.display();
+
+        // 测试用例2：重复插入
+        System.out.println("\n=== 测试用例2：重复插入 ===");
+        jl.insertElement(5);
+        jl.display();
+
+        // 测试用例3：删除不存在元素
+        System.out.println("\n=== 测试用例3：删除不存在元素 ===");
+        jl.deleteElement(1);
+        jl.display();
+
+        // 测试用例4：删除存在元素
+        System.out.println("\n=== 测试用例4：删除存在元素 ===");
+        jl.deleteElement(7);
+        jl.display();
+
+        // 测试用例5：查找
+        System.out.println("\n=== 测试用例5：查找 ===");
+        System.out.println("查找4: " + jl.searchElement(4));
+        System.out.println("查找7: " + jl.searchElement(7));
+
+        // 测试用例6：更多插入
+        System.out.println("\n=== 测试用例6：更多插入 ===");
+        jl.insertElement(1);
+        jl.insertElement(15);
+        jl.insertElement(8);
+        jl.display();
+    }
 }
 
 class JumpNode {
-	public int value;
-	public JumpNode[] nextLinks = null;
+    public int value;
+    public JumpNode[] nextLinks = null;
 
-	public JumpNode(int size) {
-		nextLinks = new JumpNode[size];
-		value = Integer.MAX_VALUE;
-	}
+    public JumpNode(int size) {
+        nextLinks = new JumpNode[size];
+        value = Integer.MAX_VALUE;
+    }
 }
-
-/*
- * 感想： 1.为了插入和删除的方便，采用链表头节点的思想，在跳表前端附加一个节点， 这样即便每一层没有元素pres[i]指向head也是正确的(若不附加，指向head则是指向tail)，
- * 话说原来没有想到，纠结了半天...... 2.将tail的value设置为Integer.MAX_VALUE
- * 3.看着书上敲代码也不简单啊，如果没有完全搞懂原理并且对自己所用语言的某知识点有些不熟悉， 往往会出现一些细节的bug，找起来也很麻烦。暂时还没有好的解决办法......
- */

@@ -2,7 +2,9 @@ package cn.com.sky.algorithms.leetcode.medium;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -27,18 +29,46 @@ import org.junit.Test;
 public class IncreasingSubsequences491 {
 	@Test
 	public void solution() {
-		int[] nums = { 4, 6, 7, 7 };
-		List<List<Integer>> n = findSubsequences(nums);
-		System.out.println(Arrays.asList(n));
+		int[] nums1 = { 4, 6, 7, 7 };
+		List<List<Integer>> result1 = findSubsequences(nums1);
+		System.out.println("测试用例1: " + result1);
+		
+		int[] nums2 = { 1, 2, 3, 4 };
+		List<List<Integer>> result2 = findSubsequences(nums2);
+		System.out.println("测试用例2: " + result2);
+		
+		int[] nums3 = { 4, 4, 3, 2, 1 };
+		List<List<Integer>> result3 = findSubsequences(nums3);
+		System.out.println("测试用例3: " + result3);
 	}
 
-	// TODO
 	public List<List<Integer>> findSubsequences(int[] nums) {
-
-		List<List<Integer>> list = new ArrayList<>();
-
-		return list;
-
+		List<List<Integer>> result = new ArrayList<>();
+		backtrack(nums, 0, new ArrayList<>(), result);
+		return result;
 	}
-
+	
+	private void backtrack(int[] nums, int start, List<Integer> path, List<List<Integer>> result) {
+		if (path.size() >= 2) {
+			result.add(new ArrayList<>(path));
+		}
+		
+		Set<Integer> used = new HashSet<>();
+		for (int i = start; i < nums.length; i++) {
+			// 跳过重复元素
+			if (used.contains(nums[i])) {
+				continue;
+			}
+			
+			// 如果路径不为空且当前元素小于路径最后一个元素，跳过
+			if (!path.isEmpty() && nums[i] < path.get(path.size() - 1)) {
+				continue;
+			}
+			
+			used.add(nums[i]);
+			path.add(nums[i]);
+			backtrack(nums, i + 1, path, result);
+			path.remove(path.size() - 1);
+		}
+	}
 }
