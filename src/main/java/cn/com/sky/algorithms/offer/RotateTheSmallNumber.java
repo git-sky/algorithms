@@ -1,108 +1,123 @@
 package cn.com.sky.algorithms.offer;
 
 import java.util.Arrays;
-import java.util.Random;
-
-import org.junit.Test;
 
 /**
  * <pre>
- * 7.旋转数组的最小数字
- * 
- * 题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。
+ * 剑指Offer 11. 旋转数组的最小数字【Easy】
+ *
+ * 题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+ * 输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。
  * 例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。
- * 
- * 思路:我们注意到旋转之后的数组实际上可以划分为两个排序的子数组，而且前面的子数组的元素都大于或者等于后面子数组的元素。
- * 我们还注意到最小的元素刚好是这两个子数组的分界线。在排序的数组中我们可以用二分查找法实现O(logn)的查找。
- * 
+ *
+ * 算法原理（二分查找）：
+ * 1. 旋转数组由两个递增子数组组成，前面子数组的元素都大于等于后面子数组的元素
+ * 2. 最小元素刚好是两个子数组的分界线
+ * 3. 使用二分查找：
+ *    - 如果中间元素 >= 左指针元素，最小值在右半部分
+ *    - 如果中间元素 <= 右指针元素，最小值在左半部分
+ * 4. 当左右指针相邻时，右指针指向的就是最小值
+ * 5. 特殊情况：当三个指针指向的值相等时，无法判断，需要顺序查找
+ *
+ * 时间复杂度：O(log n)，最坏O(n)（当元素大量重复时）
+ * 空间复杂度：O(1)
+ * </pre>
  */
 public class RotateTheSmallNumber {
 
-	@Test
-	public void solution() {
+    public static void main(String[] args) {
+        RotateTheSmallNumber solution = new RotateTheSmallNumber();
 
-		int[] arr = init();
-		int min = getMin(arr);
-		System.out.println("min:" + min);
-	}
+        // 测试用例1：正常旋转
+        System.out.println("=== 测试用例1：正常旋转 ===");
+        int[] arr1 = {3, 4, 5, 1, 2};
+        System.out.println("数组: " + Arrays.toString(arr1));
+        System.out.println("最小值: " + solution.getMin(arr1)); // 1
 
-	/**
-	 * 解决方案1
-	 */
-	public int getMin(int[] numbers) {
-		if (numbers == null || numbers.length <= 0) {
-			return Integer.MIN_VALUE;
-		}
+        // 测试用例2：未旋转（递增数组）
+        System.out.println("\n=== 测试用例2：未旋转 ===");
+        int[] arr2 = {1, 2, 3, 4, 5};
+        System.out.println("数组: " + Arrays.toString(arr2));
+        System.out.println("最小值: " + solution.getMin(arr2)); // 1
 
-		int index1 = 0;
-		int index2 = numbers.length - 1;
-		// 把indexMid初始化为index1的原因：
-		// 一旦发现数组中第一个数字小于最后一个数字，表明该数组是排序的
-		// 就可以直接返回第一个数字了
-		int indexMid = index1;
+        // 测试用例3：旋转1个元素
+        System.out.println("\n=== 测试用例3：旋转1个元素 ===");
+        int[] arr3 = {5, 1, 2, 3, 4};
+        System.out.println("数组: " + Arrays.toString(arr3));
+        System.out.println("最小值: " + solution.getMin(arr3)); // 1
 
-		while (numbers[index1] >= numbers[index2]) {
-			// 如果index1和index2指向相邻的两个数，
-			// 则index1指向第一个递增子数组的最后一个数字，
-			// index2指向第二个子数组的第一个数字，也就是数组中的最小数字
-			if (index2 - index1 == 1) {
-				indexMid = index2;
-				break;
-			}
-			indexMid = (index1 + index2) / 2;
-			// 特殊情况：如果下标为index1、index2和indexMid指向的三个数字相等，则只能顺序查找
-			if (numbers[index1] == numbers[indexMid] && numbers[indexMid] == numbers[index2]) {
-				return getMinInOrder(numbers, index1, index2);
-			}
-			// 缩小查找范围
-			if (numbers[indexMid] >= numbers[index1]) {
-				index1 = indexMid;
-			} else if (numbers[indexMid] <= numbers[index2]) {
-				index2 = indexMid;
-			}
-		}
-		System.out.println("pos:" + indexMid);
-		return numbers[indexMid];
-	}
+        // 测试用例4：两个元素
+        System.out.println("\n=== 测试用例4：两个元素 ===");
+        int[] arr4 = {2, 1};
+        System.out.println("数组: " + Arrays.toString(arr4));
+        System.out.println("最小值: " + solution.getMin(arr4)); // 1
 
-	public int getMinInOrder(int[] numbers, int index1, int index2) {
-		int result = numbers[index1];
-		for (int i = index1 + 1; i <= index2; ++i) {
-			if (result > numbers[i]) {
-				result = numbers[i];
-			}
-		}
-		return result;
-	}
+        // 测试用例5：单元素
+        System.out.println("\n=== 测试用例5：单元素 ===");
+        int[] arr5 = {1};
+        System.out.println("数组: " + Arrays.toString(arr5));
+        System.out.println("最小值: " + solution.getMin(arr5)); // 1
 
-	public int[] init() {
+        // 测试用例6：含重复元素
+        System.out.println("\n=== 测试用例6：含重复元素 ===");
+        int[] arr6 = {1, 0, 1, 1, 1};
+        System.out.println("数组: " + Arrays.toString(arr6));
+        System.out.println("最小值: " + solution.getMin(arr6)); // 0
 
-		Random r = new Random();
-		int len = r.nextInt(5) + 5;
-		int[] arr = new int[len];
-		for (int i = 0; i < len; i++) {
-			arr[i] = r.nextInt(i * i + 10) + 1;
-			while (i > 0 && arr[i] < arr[i - 1]) {
-				arr[i] = r.nextInt(i * i + 10) + 1;
-			}
-		}
+        // 测试用例7：空数组
+        System.out.println("\n=== 测试用例7：空数组 ===");
+        int[] arr7 = {};
+        System.out.println("最小值: " + solution.getMin(arr7)); // Integer.MIN_VALUE
+    }
 
-		System.out.println("before:" + Arrays.toString(arr));
+    /**
+     * 二分查找旋转数组的最小值
+     *
+     * @param numbers 旋转数组
+     * @return 最小值
+     */
+    public int getMin(int[] numbers) {
+        if (numbers == null || numbers.length == 0) {
+            return Integer.MIN_VALUE;
+        }
 
-		int num = r.nextInt(5) + 1;
+        int left = 0;
+        int right = numbers.length - 1;
+        int mid = left;
 
-		System.out.println("num:" + num);
+        while (numbers[left] >= numbers[right]) {
+            if (right - left == 1) {
+                mid = right;
+                break;
+            }
 
-		for (int i = 0; i < num; i++) {// 移动次数
-			int temp = arr[0];
-			for (int j = 0; j < arr.length - 1; j++) {
-				arr[j] = arr[j + 1];
-			}
-			arr[arr.length - 1] = temp;
-		}
+            mid = (left + right) / 2;
 
-		System.out.println("after:" + Arrays.toString(arr));
+            // 特殊情况：三个指针指向的值相等，无法判断，顺序查找
+            if (numbers[left] == numbers[mid] && numbers[mid] == numbers[right]) {
+                return getMinInOrder(numbers, left, right);
+            }
 
-		return arr;
-	}
+            if (numbers[mid] >= numbers[left]) {
+                left = mid;
+            } else if (numbers[mid] <= numbers[right]) {
+                right = mid;
+            }
+        }
+
+        return numbers[mid];
+    }
+
+    /**
+     * 顺序查找最小值
+     */
+    private int getMinInOrder(int[] numbers, int left, int right) {
+        int result = numbers[left];
+        for (int i = left + 1; i <= right; i++) {
+            if (result > numbers[i]) {
+                result = numbers[i];
+            }
+        }
+        return result;
+    }
 }

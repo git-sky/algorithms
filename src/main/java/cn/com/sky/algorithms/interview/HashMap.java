@@ -54,6 +54,10 @@ public class HashMap<K, V> {
         return count;
     }
 
+    public int getCount() {
+        return count;
+    }
+
     public boolean isEmpty() {
         return count == 0;
     }

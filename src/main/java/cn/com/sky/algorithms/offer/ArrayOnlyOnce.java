@@ -1,117 +1,94 @@
 package cn.com.sky.algorithms.offer;
 
-import org.junit.Test;
-
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * <pre>
- * 一个整型数组里除了两个数字之外，其他的数字都出现了两次。 请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度O(1)。
+ * 剑指Offer 56-I. 数组中只出现一次的两个数字【Medium】
+ *
+ * 题目：一个整型数组里除了两个数字之外，其他的数字都出现了两次。
+ * 请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度O(1)。
+ *
+ * 算法原理（异或分组法）：
+ * 1. 将所有元素异或，结果为两个只出现一次的数字的异或值（因为其他数字异或后为0）
+ * 2. 找到异或结果中为1的某一位（说明这两个数字在该位上不同）
+ * 3. 根据该位将数组分成两组，每组恰好包含一个只出现一次的数字
+ * 4. 分别对两组进行异或，即可得到两个只出现一次的数字
+ *
+ * 核心思想：
+ *   异或性质：a ^ a = 0, a ^ 0 = a
+ *   通过某一位的不同将两个目标数字分到不同的组
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ * </pre>
  */
 public class ArrayOnlyOnce {
 
-    @Test
-    public void solution() {
-        int[] arr = init();
+    public static void main(String[] args) {
+        ArrayOnlyOnce solution = new ArrayOnlyOnce();
 
-        System.out.println(Arrays.toString(arr));
+        // 测试用例1：正常情况
+        System.out.println("=== 测试用例1：正常情况 ===");
+        int[] arr1 = {2, 4, 3, 6, 3, 2, 5, 5};
+        System.out.println("数组: " + Arrays.toString(arr1));
+        solution.findNumsAppearOnce(arr1); // 4, 6
 
-        // find(arr);
+        // 测试用例2：两个数在数组两端
+        System.out.println("\n=== 测试用例2：两个数在数组两端 ===");
+        int[] arr2 = {1, 1, 2, 2, 3, 4};
+        System.out.println("数组: " + Arrays.toString(arr2));
+        solution.findNumsAppearOnce(arr2); // 3, 4
 
-        findNumsAppearOnce(arr);
+        // 测试用例3：含负数
+        System.out.println("\n=== 测试用例3：含负数 ===");
+        int[] arr3 = {-1, -1, -2, 3};
+        System.out.println("数组: " + Arrays.toString(arr3));
+        solution.findNumsAppearOnce(arr3); // -2, 3
 
-    }
+        // 测试用例4：最小数组
+        System.out.println("\n=== 测试用例4：最小数组 ===");
+        int[] arr4 = {1, 2};
+        System.out.println("数组: " + Arrays.toString(arr4));
+        solution.findNumsAppearOnce(arr4); // 1, 2
 
-    public void find(int[] arr) {
-
-        //1、所有元素进行异或，result是两个不重复的数的异或。
-        int result = 0;
-        for (int i = 0; i < arr.length; i++) {
-            result ^= arr[i];
-        }
-
-        //2、通过移动mask找到最后为1的数
-        int mask = 1;
-        for (int i = 0; i < 32; i++) {
-            int x = result & mask;
-            if (x != 0)
-                break;
-            mask <<= 1;
-        }
-
-        System.out.println(mask);
-
-        //3、使用mask异或所有的数，得到做后的结果。
-        int a = 0;
-        int b = 0;
-        for (int i = 0; i < arr.length; i++) {
-            if (0 == (mask & arr[i])) {
-                a ^= arr[i];
-            } else {
-                b ^= arr[i];
-            }
-        }
-
-        System.out.println("a:" + a);
-        System.out.println("b:" + b);
-
+        // 测试用例5：含0
+        System.out.println("\n=== 测试用例5：含0 ===");
+        int[] arr5 = {0, 1, 1, 2, 2, 3, 3, 4};
+        System.out.println("数组: " + Arrays.toString(arr5));
+        solution.findNumsAppearOnce(arr5); // 0, 4
     }
 
     /**
-     * 初始化数组
+     * 找出数组中只出现一次的两个数字
+     *
+     * @param array 输入数组
      */
-    public int[] init() {
-
-        Random r = new Random();
-        int len = r.nextInt(3) + 5;
-        int[] arr = new int[2 * (len + 1)];
-
-        for (int i = 0; i < 2 * len; ) {
-
-            int x = r.nextInt(20) + 1;
-            arr[i++] = x;
-            arr[i++] = x;
-        }
-
-        arr[2 * len] = r.nextInt(10) + 5;
-        arr[2 * len + 1] = r.nextInt(10) + 5;
-
-        return arr;
-    }
-
-    private static void findNumsAppearOnce(int[] array) {
-        if (array == null)
+    public void findNumsAppearOnce(int[] array) {
+        if (array == null || array.length < 2) {
             return;
-        int num = 0;
-        for (int i : array) {
-            num ^= i;
         }
-        int index = findFirstBitIs1(num);
-        int number1 = 0;
-        int number2 = 0;
-        for (int i : array) {
-            if (isBit1(i, index))
-                number1 ^= i;
-            else
-                number2 ^= i;
+
+        // 第一步：所有元素异或，结果为两个只出现一次数字的异或值
+        int xorResult = 0;
+        for (int num : array) {
+            xorResult ^= num;
         }
-        System.out.println(number1);
-        System.out.println(number2);
-    }
 
-    private static boolean isBit1(int number, int index) {
-        number = number >> index;
-        return (number & 1) == 0;
-    }
+        // 第二步：找到异或结果中最低位为1的位置
+        int mask = xorResult & (-xorResult);
 
-    private static int findFirstBitIs1(int num) {
-        int index = 0;
-        while ((num & 1) == 0) {
-            num = num >> 1;
-            index++;
+        // 第三步：根据该位将数组分成两组，分别异或
+        int num1 = 0;
+        int num2 = 0;
+        for (int num : array) {
+            if ((num & mask) == 0) {
+                num1 ^= num;
+            } else {
+                num2 ^= num;
+            }
         }
-        return index;
-    }
 
+        System.out.println("只出现一次的数字: " + num1 + ", " + num2);
+    }
 }

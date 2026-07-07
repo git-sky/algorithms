@@ -1,49 +1,110 @@
 package cn.com.sky.algorithms.offer;
 
-import org.junit.Test;
-
 /**
  * <pre>
+ * 剑指Offer 25. 合并两个排序的链表【Easy】
  *
- * 16.合并两个排序的链表
+ * 题目：输入两个递增排序的链表，合并这两个链表并使新链表中的结点仍然是按照递增排序的。
  *
- * 题目：输入两个递增排序的链表，合并这两个链表并使新链表中的结点仍然是按照递增排序的。例如输入下图中的链表1和链表2，则合并之后的升序链表如链表3所示。
+ * 算法原理：
+ * 方法1（迭代法）【推荐】：
+ *   使用哑节点(dummy)简化头节点处理，逐个比较两个链表的节点值，
+ *   将较小的节点接到结果链表末尾，最后接上剩余部分。
+ *
+ * 方法2（递归法）：
+ *   比较两个链表头节点，较小的作为合并后的头节点，
+ *   其next指向剩余部分的合并结果。
+ *
+ * 时间复杂度：O(m + n)，需要遍历两个链表的所有节点
+ * 空间复杂度：迭代法O(1)，递归法O(m + n)（递归栈）
+ * </pre>
  */
 public class MergeTwoSortedLinkedList {
 
-    @Test
-    public void solution() {
+    public static void main(String[] args) {
+        MergeTwoSortedLinkedList solution = new MergeTwoSortedLinkedList();
 
-        int N = 10;
+        // 测试用例1：正常合并
+        System.out.println("=== 测试用例1：正常合并 ===");
+        Node head1 = solution.buildList(new int[]{1, 3, 5, 7});
+        Node head2 = solution.buildList(new int[]{2, 4, 6, 8});
+        System.out.print("链表1: "); solution.print(head1);
+        System.out.print("链表2: "); solution.print(head2);
+        Node merged1 = solution.mergeIterative(head1, head2);
+        System.out.print("合并后: "); solution.print(merged1);
 
-        int k1 = 3;
-        int k2 = 2;
-        Node head1 = init(N, k1);
-        Node head2 = init(N, k2);
+        // 测试用例2：一个链表为空
+        System.out.println("\n=== 测试用例2：一个链表为空 ===");
+        Node head3 = solution.buildList(new int[]{1, 2, 3});
+        Node merged2 = solution.mergeIterative(head3, null);
+        System.out.print("合并后: "); solution.print(merged2);
 
-        print(head1);
-        print(head2);
+        // 测试用例3：两个链表都为空
+        System.out.println("\n=== 测试用例3：两个链表都为空 ===");
+        Node merged3 = solution.mergeIterative(null, null);
+        System.out.print("合并后: "); solution.print(merged3);
 
-//        Node head3 = merge(head1, head2);
+        // 测试用例4：单节点链表
+        System.out.println("\n=== 测试用例4：单节点链表 ===");
+        Node head4 = solution.buildList(new int[]{1});
+        Node head5 = solution.buildList(new int[]{2});
+        Node merged4 = solution.mergeIterative(head4, head5);
+        System.out.print("合并后: "); solution.print(merged4);
 
-//		 Node head3 = merge2(head1, head2);
+        // 测试用例5：递归法测试
+        System.out.println("\n=== 测试用例5：递归法测试 ===");
+        Node head6 = solution.buildList(new int[]{1, 3, 5});
+        Node head7 = solution.buildList(new int[]{2, 4, 6});
+        System.out.print("链表1: "); solution.print(head6);
+        System.out.print("链表2: "); solution.print(head7);
+        Node merged5 = solution.mergeRecursive(head6, head7);
+        System.out.print("递归合并后: "); solution.print(merged5);
 
-        Node head3 = merge3(head1, head2);
-
-        print(head1);
-        print(head2);
-        print(head3);
-
+        // 测试用例6：有重复值
+        System.out.println("\n=== 测试用例6：有重复值 ===");
+        Node head8 = solution.buildList(new int[]{1, 2, 3});
+        Node head9 = solution.buildList(new int[]{1, 2, 3});
+        Node merged6 = solution.mergeIterative(head8, head9);
+        System.out.print("合并后: "); solution.print(merged6);
     }
 
     /**
-     * 递归实现，破环原链表。
+     * 迭代法合并两个排序链表
      *
-     * @param head1
-     * @param head2
-     * @return
+     * @param head1 第一个排序链表的头节点
+     * @param head2 第二个排序链表的头节点
+     * @return 合并后的排序链表头节点
      */
-    public Node merge3(Node head1, Node head2) {
+    public Node mergeIterative(Node head1, Node head2) {
+        // 哑节点，简化头节点处理
+        Node dummy = new Node(-1);
+        Node current = dummy;
+
+        while (head1 != null && head2 != null) {
+            if (head1.data <= head2.data) {
+                current.next = head1;
+                head1 = head1.next;
+            } else {
+                current.next = head2;
+                head2 = head2.next;
+            }
+            current = current.next;
+        }
+
+        // 接上剩余部分
+        current.next = (head1 != null) ? head1 : head2;
+
+        return dummy.next;
+    }
+
+    /**
+     * 递归法合并两个排序链表
+     *
+     * @param head1 第一个排序链表的头节点
+     * @param head2 第二个排序链表的头节点
+     * @return 合并后的排序链表头节点
+     */
+    public Node mergeRecursive(Node head1, Node head2) {
         if (head1 == null) {
             return head2;
         }
@@ -51,160 +112,58 @@ public class MergeTwoSortedLinkedList {
             return head1;
         }
 
-        Node head3 = null;
-
+        Node mergedHead;
         if (head1.data <= head2.data) {
-            head3 = head1;
-            head3.next = merge3(head1.next, head2);
+            mergedHead = head1;
+            mergedHead.next = mergeRecursive(head1.next, head2);
         } else {
-            head3 = head2;
-            head3.next = merge3(head1, head2.next);
+            mergedHead = head2;
+            mergedHead.next = mergeRecursive(head1, head2.next);
         }
 
-        return head3;
-
+        return mergedHead;
     }
 
     /**
-     * 破坏原链表方式的合并。
-     *
-     * @param head1
-     * @param head2
-     * @return
+     * 根据数组构建链表
      */
-    public Node merge2(Node head1, Node head2) {
-
-        Node p1 = head1;
-        Node p2 = head2;
-
-        Node head3 = null;
-        Node p3 = null;
-        Node pre = null;
-
-        while (p1 != null && p2 != null) {
-            if (p1.data <= p2.data) {
-                p3 = p1;
-                p1 = p1.next;
-            } else {
-                p3 = p2;
-                p2 = p2.next;
-            }
-
-            if (pre == null) {
-                pre = p3;
-                head3 = pre;
-            } else {
-                pre.next = p3;
-                pre = pre.next;
-            }
+    private Node buildList(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return null;
         }
-
-        while (p1 != null) {
-            p3 = p1;
-            p1 = p1.next;
-            if (pre == null) {
-                pre = p3;
-                head3 = pre;
-            } else {
-                pre.next = p3;
-                pre = pre.next;
-            }
-        }
-
-        while (p2 != null) {
-            p3 = p2;
-            p2 = p2.next;
-            if (pre == null) {
-                pre = p3;
-                head3 = pre;
-            } else {
-                pre.next = p3;
-                pre = pre.next;
-            }
-        }
-
-        return head3;
-
-    }
-
-    /**
-     * 复制的方式合并链表，原链表不变。
-     *
-     * @param head1
-     * @param head2
-     * @return
-     */
-    public Node merge(Node head1, Node head2) {
-
-        Node head3 = new Node(-1, null);
-        Node p1 = head1;
-        Node p2 = head2;
-        Node p3 = head3;
-        while (p1 != null && p2 != null) {
-            if (p1.data <= p2.data) {
-                p3.next = new Node(p1.data, null);
-                p1 = p1.next;
-            } else {
-                p3.next = new Node(p2.data, null);
-                p2 = p2.next;
-            }
-            p3 = p3.next;
-        }
-
-//		print(head1);
-//		print(head2);
-//		print(head3);
-
-        while (p1 != null) {
-            p3.next = new Node(p1.data, null);
-            p1 = p1.next;
-            p3 = p3.next;
-        }
-
-        while (p2 != null) {
-            p3.next = new Node(p2.data, null);
-            p2 = p2.next;
-            p3 = p3.next;
-        }
-
-//		print(head3);
-
-        return head3;
-
-    }
-
-    private void print(Node head) {
-        System.out.print("链表：");
-        for (Node p = head; p != null; p = p.next) {
-            System.out.print(p.data + "->");
-        }
-        System.out.println();
-    }
-
-    /**
-     * 构建单链表（头插入法，无头结点）
-     */
-    private Node init(int N, int k) {
-        Node head = null;
-        // 构建单链表（头插入）
-        for (int i = N; i >= 1; i--) {
-            Node node = new Node(i * k, head);
-            head = node;
+        Node head = new Node(arr[0]);
+        Node current = head;
+        for (int i = 1; i < arr.length; i++) {
+            current.next = new Node(arr[i]);
+            current = current.next;
         }
         return head;
     }
 
     /**
-     * 链表的节点
+     * 打印链表
+     */
+    private void print(Node head) {
+        for (Node p = head; p != null; p = p.next) {
+            System.out.print(p.data + "->");
+        }
+        System.out.println("null");
+    }
+
+    /**
+     * 链表节点
      */
     static class Node {
         int data;
         Node next;
+
+        Node(int data) {
+            this.data = data;
+        }
 
         Node(int data, Node next) {
             this.data = data;
             this.next = next;
         }
     }
-
 }
