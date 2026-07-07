@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.ByteDance;
+package cn.com.sky.algorithms.ByteDance.top10;
 
 import java.util.Arrays;
 import java.util.HashMap;

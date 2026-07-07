@@ -1,16 +1,14 @@
-package cn.com.sky.algorithms.ByteDance;
-
-import cn.com.sky.algorithms.leetcode.easy.LongestSubstringWithoutRepeatingCharacters3;
+package cn.com.sky.algorithms.ByteDance.top10;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LongestSubstringWithoutRepeatingCharacters3_v1 {
+public class LongestSubstringWithoutRepeatingCharacters3 {
 
 
     // 测试方法
     public static void main(String[] args) {
-        LongestSubstringWithoutRepeatingCharacters3 solution = new LongestSubstringWithoutRepeatingCharacters3();
+        cn.com.sky.algorithms.leetcode.easy.LongestSubstringWithoutRepeatingCharacters3 solution = new cn.com.sky.algorithms.leetcode.easy.LongestSubstringWithoutRepeatingCharacters3();
 
         System.out.println("测试用例1: " + solution.lengthOfLongestSubstring("abcabcbb"));  // 3
         System.out.println("测试用例2: " + solution.lengthOfLongestSubstring("bbbbb"));     // 1

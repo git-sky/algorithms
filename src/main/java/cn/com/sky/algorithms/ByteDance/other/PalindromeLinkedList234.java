@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.ByteDance;
+package cn.com.sky.algorithms.ByteDance.other;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ import org.junit.Test;
  *
  * </pre>
  */
-public class PalindromeLinkedList234_v1 {
+public class PalindromeLinkedList234 {
 
     /**
      * 链表节点定义

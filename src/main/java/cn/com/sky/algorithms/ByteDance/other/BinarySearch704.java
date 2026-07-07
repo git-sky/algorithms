@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.ByteDance;
+package cn.com.sky.algorithms.ByteDance.other;
 
 import org.junit.Test;
 
