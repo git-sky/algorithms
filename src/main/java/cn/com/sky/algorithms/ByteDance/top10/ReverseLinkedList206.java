@@ -1,62 +1,54 @@
 package cn.com.sky.algorithms.ByteDance.top10;
 
-import org.junit.Test;
-
+/**
+ * LeetCode 206. 反转链表【Easy】（字节跳动高频）
+ * 
+ * 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+ * 
+ * 算法原理（迭代）：
+ * 1. 使用三个指针：prev（前一个节点）、curr（当前节点）、next（下一个节点）
+ * 2. 遍历链表，逐个将节点的 next 指针指向前一个节点
+ * 3. 最后返回 prev（新的头节点）
+ * 
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ */
 public class ReverseLinkedList206 {
 
-    @Test
-    public void test() {
-        // 测试用例1：正常链表
-        System.out.println("=== 测试用例1：正常链表 1->2->3->4->5 ===");
-        ListNode head1 = createLinkedList(new int[]{1, 2, 3, 4, 5});
-        System.out.print("原始链表: ");
-        printLinkedList(head1);
+    public static class ListNode {
+        int val;
+        ListNode next;
 
-        ListNode reversed1 = reverseListIterative(head1);
-        System.out.print("迭代反转: ");
-        printLinkedList(reversed1);
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
 
-        // 重新创建链表测试递归法
-        ListNode head1Recur = createLinkedList(new int[]{1, 2, 3, 4, 5});
-        ListNode reversed1Recur = reverseListRecursive(head1Recur);
-        System.out.print("递归反转: ");
-        printLinkedList(reversed1Recur);
-
+    public static void main(String[] args) {
+        ReverseLinkedList206 solution = new ReverseLinkedList206();
+        
+        // 测试用例1：正常情况
+        ListNode head1 = createList(new int[]{1, 2, 3, 4, 5});
+        System.out.println("测试用例1原链表: " + listToString(head1));
+        ListNode result1 = solution.reverseList(head1);
+        System.out.println("测试用例1反转后: " + listToString(result1)); // [5,4,3,2,1]
+        
         // 测试用例2：空链表
-        System.out.println("\n=== 测试用例2：空链表 ===");
-        ListNode head2 = null;
-        System.out.print("原始链表: ");
-        printLinkedList(head2);
-        ListNode reversed2 = reverseListIterative(head2);
-        System.out.print("反转结果: ");
-        printLinkedList(reversed2);
-
-        // 测试用例3：单节点链表
-        System.out.println("\n=== 测试用例3：单节点链表 ===");
-        ListNode head3 = createLinkedList(new int[]{1});
-        System.out.print("原始链表: ");
-        printLinkedList(head3);
-        ListNode reversed3 = reverseListIterative(head3);
-        System.out.print("反转结果: ");
-        printLinkedList(reversed3);
-
-        // 测试用例4：两个节点链表
-        System.out.println("\n=== 测试用例4：两个节点链表 ===");
-        ListNode head4 = createLinkedList(new int[]{1, 2});
-        System.out.print("原始链表: ");
-        printLinkedList(head4);
-        ListNode reversed4 = reverseListIterative(head4);
-        System.out.print("反转结果: ");
-        printLinkedList(reversed4);
+        System.out.println("测试用例2空链表: " + listToString(solution.reverseList(null))); // []
+        
+        // 测试用例3：单节点
+        ListNode head3 = new ListNode(1);
+        System.out.println("测试用例3单节点: " + listToString(solution.reverseList(head3))); // [1]
+        
+        // 测试用例4：两个节点
+        ListNode head4 = new ListNode(1, new ListNode(2));
+        System.out.println("测试用例4两节点反转后: " + listToString(solution.reverseList(head4))); // [2,1]
     }
 
     /**
-     * 根据数组创建链表
+     * 创建链表
      */
-    private ListNode createLinkedList(int[] arr) {
-        if (arr == null || arr.length == 0) {
-            return null;
-        }
+    private static ListNode createList(int[] arr) {
         ListNode head = new ListNode(arr[0]);
         ListNode curr = head;
         for (int i = 1; i < arr.length; i++) {
@@ -67,70 +59,54 @@ public class ReverseLinkedList206 {
     }
 
     /**
-     * 打印链表
+     * 链表转字符串
      */
-    private void printLinkedList(ListNode head) {
+    private static String listToString(ListNode head) {
         if (head == null) {
-            System.out.println("null");
-            return;
+            return "[]";
         }
+        StringBuilder sb = new StringBuilder("[");
         ListNode curr = head;
         while (curr != null) {
-            System.out.print(curr.val);
+            sb.append(curr.val);
             if (curr.next != null) {
-                System.out.print(" -> ");
+                sb.append(",");
             }
             curr = curr.next;
         }
-        System.out.println();
+        sb.append("]");
+        return sb.toString();
     }
 
-    // 方法一：迭代法（推荐）
-    // 使用双指针遍历链表，逐个节点反转指针方向。
-    public ListNode reverseListIterative(ListNode head) {
-        ListNode prev = null;  // 前一个节点
-        ListNode curr = head;  // 当前节点
-
+    /**
+     * 迭代法反转链表
+     */
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        
         while (curr != null) {
-            ListNode nextTemp = curr.next;  // 保存下一个节点
-            curr.next = prev;               // 反转指针
-            prev = curr;                    // 移动 prev
-            curr = nextTemp;                // 移动 curr
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
         }
-        return prev;  // prev 最终指向新的头节点
+        
+        return prev;
     }
 
-    // 方法二：递归法
+    /**
+     * 递归法反转链表
+     */
     public ListNode reverseListRecursive(ListNode head) {
-        // 递归终止条件：空链表或只有一个节点
         if (head == null || head.next == null) {
             return head;
         }
-
-        // 递归反转后续链表
+        
         ListNode newHead = reverseListRecursive(head.next);
-
-        // 反转当前节点指针
         head.next.next = head;
-        head.next = null;  // 防止循环
-
+        head.next = null;
+        
         return newHead;
-    }
-
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
     }
 }

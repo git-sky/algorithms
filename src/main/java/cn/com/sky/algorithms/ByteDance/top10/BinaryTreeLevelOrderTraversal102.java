@@ -9,8 +9,7 @@ import org.junit.Test;
 
 /**
  * <pre>
- *
- * 102. Binary Tree Level Order Traversal
+ * LeetCode 102. Binary Tree Level Order Traversal【Medium】
  *
  * Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level).
  *
@@ -94,4 +93,3 @@ public class BinaryTreeLevelOrderTraversal102 {
         }
     }
 }
-

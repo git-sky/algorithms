@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * 26. Remove Duplicates from Sorted Array
+ * LeetCode 26. Remove Duplicates from Sorted Array【Easy】
  * <p>
  * Given a sorted array nums, remove the duplicates in-place such that
  * each element appears only once and returns the new length.

@@ -3,7 +3,7 @@ package cn.com.sky.algorithms.ByteDance.top10;
 import org.junit.Test;
 
 /**
- * 104. Maximum Depth of Binary Tree
+ * LeetCode 104. Maximum Depth of Binary Tree【Easy】
  * <p>
  * Given the root of a binary tree, return its maximum depth.
  * A binary tree's maximum depth is the number of nodes along
