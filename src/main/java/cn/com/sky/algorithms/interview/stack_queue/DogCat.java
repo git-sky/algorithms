@@ -5,23 +5,24 @@ import java.util.Queue;
 
 /**
  * <pre>
- * 猫狗队列问题【Medium】
- * 
- * 题目描述：实现一个猫狗队列，支持以下操作：
- * 1. add(pet) - 添加宠物（猫或狗）
- * 2. poll() - 弹出最早加入的宠物
- * 3. pollDog() - 弹出最早加入的狗
- * 4. pollCat() - 弹出最早加入的猫
- * 5. isEmpty() - 判断队列是否为空
- * 6. isDogEmpty() - 判断狗队列是否为空
- * 7. isCatEmpty() - 判断猫队列是否为空
- * 
- * 算法原理：
- * 使用两个队列分别存储猫和狗，同时为每个宠物添加时间戳：
- * 1. 添加宠物时，记录时间戳并加入对应队列
- * 2. 弹出时比较两个队列头部的时间戳，选择较早的
- * 
- * 时间复杂度：O(1)（所有操作）
+ * 猫狗队列【Medium】
+ *
+ * 题目：实现一种猫狗队列结构，要求：
+ * 1. 可以调用add方法将cat或dog类的实例放入队列
+ * 2. 可以调用pollAll方法，按进队顺序依次弹出所有实例
+ * 3. 可以调用pollDog方法，按进队顺序依次弹出dog实例
+ * 4. 可以调用pollCat方法，按进队顺序依次弹出cat实例
+ * 5. 可以调用isEmpty方法，检查队列是否为空
+ * 6. 可以调用isDogEmpty方法，检查dog队列是否为空
+ * 7. 可以调用isCatEmpty方法，检查cat队列是否为空
+ *
+ * 算法原理（双队列 + 时间戳）：
+ * 1. 使用两个队列分别存储cat和dog
+ * 2. 每个元素附带一个递增的时间戳count
+ * 3. pollAll时比较两个队列队头的时间戳，弹出时间戳较小的
+ * 4. pollDog/pollCat直接从对应队列弹出
+ *
+ * 时间复杂度：add O(1)，pollAll O(1)，pollDog O(1)，pollCat O(1)
  * 空间复杂度：O(n)
  * </pre>
  */
@@ -29,32 +30,36 @@ public class DogCat {
 
     public static void main(String[] args) {
         DogCatQueue queue = new DogCatQueue();
-        
-        // 测试用例1：正常添加和弹出
-        queue.add(new Dog("旺财"));
-        queue.add(new Cat("咪咪"));
-        queue.add(new Dog("大黄"));
-        System.out.println("测试用例1(poll): " + queue.poll()); // Dog(旺财)
-        System.out.println("测试用例1(pollDog): " + queue.pollDog()); // Dog(大黄)
-        System.out.println("测试用例1(pollCat): " + queue.pollCat()); // Cat(咪咪)
-        
-        // 测试用例2：交替添加
-        queue.add(new Cat("小黑"));
-        queue.add(new Dog("阿福"));
-        queue.add(new Cat("雪球"));
-        System.out.println("测试用例2(poll): " + queue.poll()); // Cat(小黑)
-        System.out.println("测试用例2(poll): " + queue.poll()); // Dog(阿福)
-        
-        // 测试用例3：空队列弹出
-        System.out.println("测试用例3(isEmpty): " + queue.isEmpty()); // false
-        queue.poll(); // Cat(雪球)
-        System.out.println("测试用例3(isEmpty): " + queue.isEmpty()); // true
+
+        // 测试用例1：正常操作
+        System.out.println("=== 测试用例1：正常操作 ===");
+        queue.add(new Dog("dog1"));
+        queue.add(new Cat("cat1"));
+        queue.add(new Dog("dog2"));
+        queue.add(new Cat("cat2"));
+        queue.add(new Dog("dog3"));
+
+        System.out.println("isEmpty: " + queue.isEmpty()); // false
+        System.out.println("isDogEmpty: " + queue.isDogEmpty()); // false
+        System.out.println("isCatEmpty: " + queue.isCatEmpty()); // false
+
+        System.out.println("pollAll: " + queue.pollAll().getPetType()); // dog
+        System.out.println("pollCat: " + queue.pollCat().getPetType()); // cat
+        System.out.println("pollDog: " + queue.pollDog().getPetType()); // dog
+        System.out.println("pollAll: " + queue.pollAll().getPetType()); // cat
+        System.out.println("pollAll: " + queue.pollAll().getPetType()); // dog
+
+        // 测试用例2：只添加猫
+        System.out.println("\n=== 测试用例2：只添加猫 ===");
+        DogCatQueue queue2 = new DogCatQueue();
+        queue2.add(new Cat("cat3"));
+        queue2.add(new Cat("cat4"));
+        System.out.println("isDogEmpty: " + queue2.isDogEmpty()); // true
+        System.out.println("pollCat: " + queue2.pollCat().getPetType()); // cat
+        System.out.println("pollCat: " + queue2.pollCat().getPetType()); // cat
     }
 
-    /**
-     * 宠物抽象类
-     */
-    public static abstract class Pet {
+    static class Pet {
         private String type;
 
         public Pet(String type) {
@@ -66,146 +71,101 @@ public class DogCat {
         }
     }
 
-    /**
-     * 狗类
-     */
-    public static class Dog extends Pet {
+    static class Dog extends Pet {
         public Dog(String name) {
             super("dog");
-            this.name = name;
-        }
-        
-        private String name;
-        
-        public String getName() {
-            return name;
-        }
-        
-        @Override
-        public String toString() {
-            return "Dog(" + name + ")";
         }
     }
 
-    /**
-     * 猫类
-     */
-    public static class Cat extends Pet {
+    static class Cat extends Pet {
         public Cat(String name) {
             super("cat");
-            this.name = name;
-        }
-        
-        private String name;
-        
-        public String getName() {
-            return name;
-        }
-        
-        @Override
-        public String toString() {
-            return "Cat(" + name + ")";
         }
     }
 
-    /**
-     * 带时间戳的宠物包装类
-     */
-    private static class PetEnter {
-        public Pet pet;
-        public long count;
+    static class PetEnter {
+        Pet pet;
+        long count;
 
-        public PetEnter(Pet pet, long count) {
+        PetEnter(Pet pet, long count) {
             this.pet = pet;
             this.count = count;
         }
+
+        public Pet getPet() {
+            return this.pet;
+        }
+
+        public long getCount() {
+            return this.count;
+        }
+
+        public String getEnterPetType() {
+            return this.pet.getPetType();
+        }
     }
 
-    /**
-     * 猫狗队列实现
-     */
-    public static class DogCatQueue {
-        private Queue<PetEnter> dogQ;
-        private Queue<PetEnter> catQ;
-        private long count;
+    static class DogCatQueue {
+        Queue<PetEnter> dogQ;
+        Queue<PetEnter> catQ;
+        long count;
 
         public DogCatQueue() {
-            this.dogQ = new LinkedList<>();
-            this.catQ = new LinkedList<>();
-            this.count = 0;
+            dogQ = new LinkedList<>();
+            catQ = new LinkedList<>();
+            count = 0;
         }
 
-        /**
-         * 添加宠物
-         */
         public void add(Pet pet) {
             if (pet.getPetType().equals("dog")) {
-                this.dogQ.add(new PetEnter(pet, this.count++));
+                dogQ.add(new PetEnter(pet, count++));
             } else if (pet.getPetType().equals("cat")) {
-                this.catQ.add(new PetEnter(pet, this.count++));
+                catQ.add(new PetEnter(pet, count++));
             } else {
-                throw new RuntimeException("Not dog or cat!");
+                throw new RuntimeException("err, not dog or cat");
             }
         }
 
-        /**
-         * 弹出最早加入的宠物
-         */
-        public Pet poll() {
-            if (!this.dogQ.isEmpty() && !this.catQ.isEmpty()) {
-                if (this.dogQ.peek().count < this.catQ.peek().count) {
-                    return this.dogQ.poll().pet;
+        public Pet pollAll() {
+            if (!dogQ.isEmpty() && !catQ.isEmpty()) {
+                if (dogQ.peek().getCount() < catQ.peek().getCount()) {
+                    return dogQ.poll().getPet();
                 } else {
-                    return this.catQ.poll().pet;
+                    return catQ.poll().getPet();
                 }
-            } else if (!this.dogQ.isEmpty()) {
-                return this.dogQ.poll().pet;
-            } else if (!this.catQ.isEmpty()) {
-                return this.catQ.poll().pet;
+            } else if (!dogQ.isEmpty()) {
+                return dogQ.poll().getPet();
+            } else if (!catQ.isEmpty()) {
+                return catQ.poll().getPet();
             } else {
-                throw new RuntimeException("Queue is empty!");
+                throw new RuntimeException("err, queue is empty!");
             }
         }
 
-        /**
-         * 弹出最早加入的狗
-         */
         public Dog pollDog() {
-            if (this.isDogEmpty()) {
+            if (dogQ.isEmpty()) {
                 throw new RuntimeException("Dog queue is empty!");
             }
-            return (Dog) this.dogQ.poll().pet;
+            return (Dog) dogQ.poll().getPet();
         }
 
-        /**
-         * 弹出最早加入的猫
-         */
         public Cat pollCat() {
-            if (this.isCatEmpty()) {
+            if (catQ.isEmpty()) {
                 throw new RuntimeException("Cat queue is empty!");
             }
-            return (Cat) this.catQ.poll().pet;
+            return (Cat) catQ.poll().getPet();
         }
 
-        /**
-         * 判断队列是否为空
-         */
         public boolean isEmpty() {
-            return this.dogQ.isEmpty() && this.catQ.isEmpty();
+            return dogQ.isEmpty() && catQ.isEmpty();
         }
 
-        /**
-         * 判断狗队列是否为空
-         */
         public boolean isDogEmpty() {
-            return this.dogQ.isEmpty();
+            return dogQ.isEmpty();
         }
 
-        /**
-         * 判断猫队列是否为空
-         */
         public boolean isCatEmpty() {
-            return this.catQ.isEmpty();
+            return catQ.isEmpty();
         }
     }
 }

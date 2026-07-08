@@ -2,63 +2,96 @@ package cn.com.sky.algorithms.interview;
 
 /**
  * <pre>
- * 
- * 输出一个集合的全排列. 
- * 例如
- * 输入：{"a","b"}
- * 输出：ab,ba
- * 
+ * 全排列问题【Medium】
+ *
+ * 题目：输出一个集合中所有元素的全排列。
+ * 例如输入：{"a","b"}
+ * 输出：ab, ba
+ *
+ * 算法原理（回溯法 / 交换法）：
+ * 1. 从第begin个位置开始，依次将后面的每个元素交换到begin位置
+ * 2. 递归处理begin+1位置
+ * 3. 回溯：交换回来恢复原状
+ * 4. 当begin==end时，输出当前排列
+ *
+ * 去重优化：
+ * - needSwap方法检查[begin, j)范围内是否有与arr[j]相同的元素
+ * - 如果有，说明该元素已经被交换到begin位置处理过，跳过避免重复
+ *
+ * 时间复杂度：O(n!)，n个元素的全排列数为n!
+ * 空间复杂度：O(n)，递归栈深度
  * </pre>
  */
 public class Permutation2 {
 
-	public static void main(String[] args) {
-		// String[] array = new String[] { "a", "b", "c", "d" };
-		String[] array = new String[] { "a", "b", "b" };
-		perm(array, 0, array.length - 1);
-	}
+    public static void main(String[] args) {
+        // 测试用例1：4个元素全排列
+        System.out.println("=== 测试用例1：4个元素全排列 ===");
+        String[] array1 = new String[]{"a", "b", "c", "d"};
+        perm(array1, 0, array1.length - 1);
 
-	private static void perm(String[] array, int begin, int end) {
+        // 测试用例2：含重复元素
+        System.out.println("\n=== 测试用例2：含重复元素 ===");
+        String[] array2 = new String[]{"a", "b", "b"};
+        perm(array2, 0, array2.length - 1);
 
-		if (begin == end) {// 结束条件
-			print(array, end);
-			return;
-		}
+        // 测试用例3：2个元素
+        System.out.println("\n=== 测试用例3：2个元素 ===");
+        String[] array3 = new String[]{"a", "b"};
+        perm(array3, 0, array3.length - 1);
 
-		for (int i = begin; i <= end; i++) {
-			if (needSwap(array, begin, i)) {// 重复数据不排序
-				swap(array, begin, i);
-				perm(array, begin + 1, end);
-				swap(array, begin, i);
-			}
-		}
+        // 测试用例4：单元素
+        System.out.println("\n=== 测试用例4：单元素 ===");
+        String[] array4 = new String[]{"a"};
+        perm(array4, 0, array4.length - 1);
+    }
 
-	}
+    /**
+     * 全排列递归
+     *
+     * @param array 元素数组
+     * @param begin 当前处理位置
+     * @param end   数组末尾索引
+     */
+    private static void perm(String[] array, int begin, int end) {
+        if (begin == end) {
+            print(array, end);
+            return;
+        }
 
-	private static void swap(String[] arr, int i, int j) {
-		if (i == j)
-			return;
-		String tmp = arr[i];
-		arr[i] = arr[j];
-		arr[j] = tmp;
-	}
+        for (int i = begin; i <= end; i++) {
+            if (needSwap(array, begin, i)) {
+                swap(array, begin, i);
+                perm(array, begin + 1, end);
+                swap(array, begin, i);
+            }
+        }
+    }
 
-	// 判断是否需要交换位置，相同元素不用交换。例如abb中，第二个b和第三个b不需要交换。
-	private static boolean needSwap(String[] arr, int i, int j) {
-		for (; i < j; i++) {
-			if (arr[i] == arr[j]) {
-				return false;
-			}
-		}
-		return true;
+    private static void swap(String[] arr, int i, int j) {
+        if (i == j) return;
+        String tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
 
-	}
+    /**
+     * 判断是否需要交换位置，相同元素不重复交换
+     * 例如abb中，第二个b和第三个b不需要交换
+     */
+    private static boolean needSwap(String[] arr, int i, int j) {
+        for (; i < j; i++) {
+            if (arr[i] == arr[j]) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	private static void print(String[] array, int end) {
-		for (int i = 0; i <= end; i++) {
-			System.out.print(array[i]);
-		}
-		System.out.println();
-	}
-
+    private static void print(String[] array, int end) {
+        for (int i = 0; i <= end; i++) {
+            System.out.print(array[i]);
+        }
+        System.out.println();
+    }
 }

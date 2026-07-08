@@ -1,60 +1,53 @@
 package cn.com.sky.algorithms.leetcode.easy;
 
-import org.junit.Test;
-
 /**
+ * <pre>
+ * LeetCode 231. 2的幂【Easy】
  * 
- * 给一个整数,判断它是不是2的N(N>=0,整数)次方。
+ * 题目描述：给定一个整数，写一个函数来判断它是否是 2 的幂次方。
  * 
- * 231. Power of Two
+ * 示例1：输入 1，输出 true（2^0 = 1）
+ * 示例2：输入 16，输出 true（2^4 = 16）
+ * 示例3：输入 218，输出 false
  * 
- * Given an integer, write a function to determine if it is a power of two.
+ * 算法原理（位运算）：
+ * 2的幂的二进制表示中只有一个1：
+ * - 1 = 0001, 2 = 0010, 4 = 0100, 8 = 1000
  * 
+ * 利用 n & (n-1) 的特性：
+ * - n-1 会将最低位的1变为0，其后的0变为1
+ * - 如果 n 是2的幂，n & (n-1) = 0
+ * - 例如：8(1000) & 7(0111) = 0
+ * 
+ * 注意：n 必须大于0，因为0和负数不是2的幂
+ * 
+ * 时间复杂度：O(1)
+ * 空间复杂度：O(1)
+ * </pre>
  */
 public class PowerOfTwo231 {
 
-	@Test
-	public void solution() {
-		int n = 1024;
-		System.out.println(isPowerOfTwo(n));
-	}
+    public static void main(String[] args) {
+        PowerOfTwo231 solution = new PowerOfTwo231();
 
-	public boolean isPowerOfTwo(int n) {
-		return n > 0 && ((n - 1) & n) == 0;
-	}
+        // 测试用例1：2的幂
+        System.out.println("测试用例1: " + solution.isPowerOfTwo(1));    // true
+        System.out.println("测试用例2: " + solution.isPowerOfTwo(16));   // true
+        System.out.println("测试用例3: " + solution.isPowerOfTwo(1024)); // true
 
-	// public boolean isPowerOfTwo(int n) {
-	// if (n <= 0)
-	// return false;
-	//
-	// int ones = 0;
-	// for (int i = 1; i <= 32; ++i) {
-	// ones += n & 1;
-	// n = n >> 1;
-	// }
-	// return ones == 1;
-	// }
+        // 测试用例2：非2的幂
+        System.out.println("测试用例4: " + solution.isPowerOfTwo(218));  // false
+        System.out.println("测试用例5: " + solution.isPowerOfTwo(3));    // false
 
-	// 二进制中，"1"的个数是1，则符合。
-	// public boolean isPowerOfTwo(int n) {
-	// return n > 0 && Integer.bitCount(n) == 1;
-	// }
+        // 测试用例3：边界情况
+        System.out.println("测试用例6: " + solution.isPowerOfTwo(0));    // false
+        System.out.println("测试用例7: " + solution.isPowerOfTwo(-1));   // false
 
-	// 普通方式
-	// public boolean isPowerOfTwo(int n) {
-	//
-	// if (n == 1)
-	// return true;
-	//
-	// while (n > 2) {
-	// if (n % 2 != 0) {
-	// break;
-	// }
-	// n /= 2;
-	// }
-	// if (n == 2)
-	// return true;
-	// else
-	// return false;
-	// }
+        // 测试用例4：2的31次方
+        System.out.println("测试用例8: " + solution.isPowerOfTwo(1073741824)); // true
+    }
+
+    public boolean isPowerOfTwo(int n) {
+        return n > 0 && ((n - 1) & n) == 0;
+    }
 }

@@ -1,73 +1,101 @@
 package cn.com.sky.algorithms.interview;
 
-import org.junit.Test;
-
 /**
  * <pre>
- * 约瑟夫环
+ * 约瑟夫环 - 链表模拟法【Medium】
  *
- * 链表模拟
+ * 题目：N个人围成一圈，从第1个人开始报数，报到k的人出列，
+ * 然后从下一个人重新开始报数，求出列顺序。
+ *
+ * 算法原理（循环链表模拟）：
+ * 1. 构建单向链表，将尾节点指向头节点形成循环链表
+ * 2. 每次数k-1步，删除当前节点的下一个节点
+ * 3. 循环直到只剩一个节点
+ *
+ * 时间复杂度：O(n*k)
+ * 空间复杂度：O(n)
+ *
+ * 注意：此方法效率低于公式法O(n)，但直观易懂
+ * 最优解法见 JosephusProblem.java 的公式法 f(n,k) = (f(n-1,k) + k) % n
+ * </pre>
  */
 public class JosephusProblemByLinkedList {
 
-    @Test
-    public void solution() {
+    public static void main(String[] args) {
+        // 测试用例1：N=10, k=4
+        System.out.println("=== 测试用例1：N=10, k=4 ===");
+        Node head1 = createList(10);
+        print(head1);
+        System.out.println("--- 约瑟夫环出列顺序 ---");
+        josephus(head1, 10, 4);
 
-        int N = 10;
-        Node head = init(N);
-        print(head);
+        // 测试用例2：N=5, k=2
+        System.out.println("\n=== 测试用例2：N=5, k=2 ===");
+        Node head2 = createList(5);
+        print(head2);
+        System.out.println("--- 约瑟夫环出列顺序 ---");
+        josephus(head2, 5, 2);
 
-//        head = reverse(head);
+        // 测试用例3：N=1, k=1
+        System.out.println("\n=== 测试用例3：N=1, k=1 ===");
+        Node head3 = createList(1);
+        josephus(head3, 1, 1);
 
-        head = reverseByRecursion(head);
-
-        print(head);
-
-        int k = 4;
-
-        del(head, N, k);
+        // 测试用例4：验证链表反转
+        System.out.println("\n=== 测试用例4：链表反转 ===");
+        Node head4 = createList(6);
+        print(head4);
+        head4 = reverse(head4);
+        print(head4);
+        head4 = reverseByRecursion(head4);
+        print(head4);
     }
 
     /**
-     * 约瑟夫环的删除顺序。
+     * 约瑟夫环的删除顺序（循环链表法）
      *
-     * @param head
-     * @param N
+     * @param head 链表头节点
+     * @param N    总人数
+     * @param k    报数到k出列
      */
-    public static void del(Node head, int N, int k) {
-
-        Node first = head;
-        while (head.next != null) {
-            head = head.next;
+    public static void josephus(Node head, int N, int k) {
+        if (head == null || N <= 0 || k <= 0) {
+            return;
         }
-        head.next = first;
-        head = first;
 
-        int x = N;
+        // 将链表首尾相连形成循环链表
+        Node tail = head;
+        while (tail.next != null) {
+            tail = tail.next;
+        }
+        tail.next = head;
 
-        while (x > 0) {
+        Node current = head;
+        int remaining = N;
 
+        while (remaining > 0) {
+            // 数k-1步，找到待删除节点的前驱
             for (int i = 2; i < k; i++) {
-                head = head.next;
+                current = current.next;
             }
-
-            System.out.println(head.next.data);
-            head.next = head.next.next;
-            head = head.next;
-            x--;
+            // 删除current的下一个节点
+            System.out.println("出列: " + current.next.data);
+            current.next = current.next.next;
+            current = current.next;
+            remaining--;
         }
     }
 
-
     /**
-     * 循环方法
-     * <p>
-     * 思路：需要三个指针，pre,head,next;
+     * 迭代法反转链表
+     * 思路：使用三个指针 pre, current, next
+     *
+     * 时间复杂度：O(n)
+     * 空间复杂度：O(1)
      */
     public static Node reverse(Node head) {
-
         Node pre = null;
-        Node next = null;
+        Node next;
         while (head != null) {
             next = head.next;
             head.next = pre;
@@ -77,64 +105,57 @@ public class JosephusProblemByLinkedList {
         return pre;
     }
 
-
-    //单链表的转置,递归方法
+    /**
+     * 递归法反转链表
+     *
+     * 原理：递归到链表末尾，从后往前逐个反转指针方向
+     * 例如：1->2->3->null
+     * 递归到3，然后 2->3 变为 2<-3，1->2 变为 1<-2
+     *
+     * 时间复杂度：O(n)
+     * 空间复杂度：O(n)（递归栈）
+     */
     public static Node reverseByRecursion(Node head) {
-        //第一个条件是判断异常，第二个条件是结束判断
         if (head == null || head.next == null) {
             return head;
         }
 
         Node newHead = reverseByRecursion(head.next);
-
         head.next.next = head;
         head.next = null;
 
-        return newHead;    //返回新链表的头指针
+        return newHead;
     }
 
-
     /**
-     * 构建单链表（头插入法，无头结点）
+     * 构建单链表（尾插法，顺序排列）
      */
-    private Node init(int N) {
-        Node head = null;
-        // 构建单链表（头插入）
-        for (int i = 1; i <= N; i++) {
-            char x = '0';
-            if (i <= 26) {
-                x = (char) ('a' - 1 + i);
-            } else {
-                x = (char) ('A' - 27 + i);
-            }
-
-            Node node = new Node(x, i, head);
-            head = node;
+    private static Node createList(int N) {
+        if (N <= 0) return null;
+        Node head = new Node(1);
+        Node current = head;
+        for (int i = 2; i <= N; i++) {
+            current.next = new Node(i);
+            current = current.next;
         }
         return head;
     }
 
-    private void print(Node head) {
+    private static void print(Node head) {
         System.out.print("链表：");
         for (Node p = head; p != null; p = p.next) {
-            System.out.print(p.c + "=" + p.data + "->");
+            System.out.print(p.data + "->");
         }
-        System.out.println();
+        System.out.println("^");
     }
 
-    /**
-     * 链表的节点
-     */
     static class Node {
-        char c;
         int data;
         Node next;
 
-        Node(char c, int data, Node next) {
-            this.c = c;
+        Node(int data) {
             this.data = data;
-            this.next = next;
+            this.next = null;
         }
     }
-
 }

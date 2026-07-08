@@ -2,65 +2,79 @@ package cn.com.sky.algorithms.leetcode.easy;
 
 import java.util.Arrays;
 
-import org.junit.Test;
-
 /**
  * <pre>
+ * LeetCode 167. 两数之和 II - 输入有序数组【Easy】
  * 
- * 167. Two Sum II - Input array is sorted
+ * 题目描述：给定一个已按照升序排列的有序数组，找到两个数使得它们相加之和等于目标数。
+ * 返回这两个数的下标（从1开始），且较小下标在前。
  * 
- * Given an array of integers that is already sorted in ascending order, find two numbers such that they add up to a specific target number.
+ * 示例：
+ * 输入：numbers = [2,7,11,15], target = 9
+ * 输出：[1,2]
  * 
- * The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
+ * 算法原理（双指针）：
+ * 1. 左指针指向数组开头，右指针指向数组末尾
+ * 2. 计算两指针指向元素之和
+ * 3. 如果和等于目标，返回下标
+ * 4. 如果和大于目标，右指针左移（减小和）
+ * 5. 如果和小于目标，左指针右移（增大和）
  * 
- * You may assume that each input would have exactly one solution and you may not use the same element twice.
+ * 为什么双指针有效：
+ * - 数组有序，每次移动指针都能确定排除一部分不可能的解
+ * - 不会遗漏解，因为对于每个左指针，右指针只会向左移动
  * 
- * Input: numbers={2, 7, 11, 15}, target=9
- * 
- * Output: index1=1, index2=2
- * 
- * 
- * 
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
  * </pre>
- * 
- * 
  */
 public class TwoSumIIInputArrayIsSorted167 {
 
-	@Test
-	public void solution() {
-		int[] nums = { 2, 7, 11, 15 };
-		int target = 9;
-		System.out.println(Arrays.toString(nums));
+    public static void main(String[] args) {
+        TwoSumIIInputArrayIsSorted167 solution = new TwoSumIIInputArrayIsSorted167();
 
-		int[] indice = twoSum(nums, target);
-		System.out.println(Arrays.toString(indice));
-	}
+        // 测试用例1：正常情况
+        int[] nums1 = {2, 7, 11, 15};
+        System.out.println("测试用例1: " + Arrays.toString(solution.twoSum(nums1, 9))); // [1,2]
 
-	/**
-	 *  O(n)
-	 */
-	public int[] twoSum(int[] num, int target) {
-		int[] indice = new int[2];
-		if (num == null || num.length < 2)
-			return indice;
+        // 测试用例2：目标在中间
+        int[] nums2 = {2, 3, 4};
+        System.out.println("测试用例2: " + Arrays.toString(solution.twoSum(nums2, 6))); // [1,3]
 
-		int left = 0, right = num.length - 1;
+        // 测试用例3：负数
+        int[] nums3 = {-1, 0};
+        System.out.println("测试用例3: " + Arrays.toString(solution.twoSum(nums3, -1))); // [1,2]
 
-		while (left < right) {
-			int v = num[left] + num[right];
-			if (v == target) {
-				indice[0] = left + 1;
-				indice[1] = right + 1;
-				break;
-			} else if (v > target) {
-				right--;
-			} else {
-				left++;
-			}
-		}
+        // 测试用例4：首尾
+        int[] nums4 = {1, 2, 3, 4, 4};
+        System.out.println("测试用例4: " + Arrays.toString(solution.twoSum(nums4, 8))); // [4,5]
 
-		return indice;
-	}
+        // 测试用例5：两元素
+        int[] nums5 = {5, 25};
+        System.out.println("测试用例5: " + Arrays.toString(solution.twoSum(nums5, 30))); // [1,2]
+    }
 
+    public int[] twoSum(int[] num, int target) {
+        int[] indice = new int[2];
+        if (num == null || num.length < 2) {
+            return indice;
+        }
+
+        int left = 0, right = num.length - 1;
+
+        while (left < right) {
+            int v = num[left] + num[right];
+            if (v == target) {
+                indice[0] = left + 1;
+                indice[1] = right + 1;
+                break;
+            } else if (v > target) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+
+        return indice;
+    }
 }

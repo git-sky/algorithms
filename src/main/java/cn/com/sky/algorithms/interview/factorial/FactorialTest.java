@@ -1,34 +1,53 @@
 package cn.com.sky.algorithms.interview.factorial;
 
-import org.junit.Test;
-
 /**
- * 阶乘算法
- * <p>
- * 求N的阶乘
- * <p>
- * 即n!=1×2×3×...×n。
+ * <pre>
+ * 阶乘算法【Easy】
+ *
+ * 题目：求N的阶乘，即n! = 1×2×3×...×n
+ *
+ * 算法原理：
+ * 方法1（迭代法，最优）：从1乘到n
+ *   - 时间复杂度O(n)，空间复杂度O(1)
+ *
+ * 方法2（递归法）：n! = n × (n-1)!
+ *   - 时间复杂度O(n)，空间复杂度O(n)（递归栈）
+ *   - 缺点：n较大时可能栈溢出
+ *
+ * 时间复杂度：迭代法O(n)，递归法O(n)
+ * 空间复杂度：迭代法O(1)，递归法O(n)
+ * </pre>
  */
 public class FactorialTest {
 
-    @Test
-    public void solution() {
+    public static void main(String[] args) {
+        // 测试用例1：n=5，5! = 120
+        System.out.println("=== 测试用例1：n=5 ===");
+        System.out.println("迭代法: " + factorial(5));
+        System.out.println("递归法: " + factorialRecursive(5));
 
-        int n = 5;
+        // 测试用例2：n=1
+        System.out.println("\n=== 测试用例2：n=1 ===");
+        System.out.println("迭代法: " + factorial(1));
 
-        System.out.println(factorial(n));
-        System.out.println(factorialRecursive(n));
+        // 测试用例3：n=0（无效输入）
+        System.out.println("\n=== 测试用例3：n=0 ===");
+        System.out.println("迭代法: " + factorial(0));
+
+        // 测试用例4：n=10
+        System.out.println("\n=== 测试用例4：n=10 ===");
+        System.out.println("迭代法: " + factorial(10));
+
+        // 测试用例5：n=12（接近int上限）
+        System.out.println("\n=== 测试用例5：n=12 ===");
+        System.out.println("迭代法: " + factorial(12));
     }
 
     /**
-     * 循环实现
-     * <p>
-     * 求N的阶乘
-     * 时间复杂度O(N)
-     * 空间复杂度O(1)
+     * 迭代法（最优）
+     * 时间复杂度O(n)，空间复杂度O(1)
      */
-    private int factorial(int n) {
-
+    private static int factorial(int n) {
         if (n <= 0) return -1;
 
         int total = 1;
@@ -39,16 +58,12 @@ public class FactorialTest {
     }
 
     /**
-     * 递归实现
-     * <p>
-     * 求N的阶乘
-     * 时间复杂度O(N)
-     * 空间复杂度O(N)???
+     * 递归法
+     * 时间复杂度O(n)，空间复杂度O(n)
      */
-    private int factorialRecursive(int n) {
+    private static int factorialRecursive(int n) {
+        if (n <= 0) return -1;
         if (n == 1) return 1;
         return n * factorialRecursive(n - 1);
     }
-
-
 }

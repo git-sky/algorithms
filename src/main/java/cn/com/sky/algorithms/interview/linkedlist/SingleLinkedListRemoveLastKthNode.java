@@ -1,151 +1,154 @@
 package cn.com.sky.algorithms.interview.linkedlist;
 
-import org.junit.Test;
-
 /**
  * <pre>
- * 单链表中删除倒数第k个节点（注意：不知道链表长度，要求时间复杂度O(n)）。
- * 
- * 思路1：
- * 倒数第K个节点，就是正数第N-K节点。 第一遍遍历的值是：K-N,第二遍遍历是N-K时，K=0,刚好是需要删除的节点的前一个节点。
- * 这种思路需要遍历链表两次，第一次统计出链表中结点的个数，第二次才能找到倒数第k个结点。
- * 
- * 思路2(两个指针，先后指针策略，最优)： 
- * 为了能够只遍历一次就能找到倒数第k个节点，可以定义两个指针： 
- * （1）第一个指针从链表的头指针开始遍历向前走k-1，第二个指针保持不动；
- * （2）从第k步开始，第二个指针也开始从链表的头指针开始遍历；
- * （3）由于两个指针的距离保持在k-1，当第一个（走在前面的）指针到达链表的尾结点时，第二个指针（走在后面的）指针正好是倒数第k个结点。
- * 
- * 
- * 相似的问题：
- * 1.求链表的中间节点。
- * 答案：快慢指针，快指针一次两步，慢指针一次一步。
- * 
- * 2.判断单链表是否有环。
- * 
- * 
+ * 删除单链表倒数第k个节点【Medium】
+ *
+ * 题目：在不知道链表长度的情况下，删除单链表的倒数第k个节点，要求时间复杂度O(n)
+ *
+ * 算法原理（先后指针策略）：
+ * 方法1（遍历两次）：第一次遍历统计节点数N，第二次遍历到第N-k个节点删除
+ *   - 时间复杂度O(n)，但需要遍历两次
+ *
+ * 方法2（遍历一次，最优）：使用两个指针ahead和behind
+ *   1. ahead先走k-1步
+ *   2. 然后ahead和behind同时走，直到ahead到达链表末尾
+ *   3. 此时behind正好指向倒数第k个节点
+ *   - 原理：两个指针之间始终保持k-1的距离
+ *
+ * 相似问题：
+ * 1. 求链表中间节点：快慢指针，快指针走2步，慢指针走1步
+ * 2. 判断链表是否有环：快慢指针法
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(1)
+ * </pre>
  */
 public class SingleLinkedListRemoveLastKthNode {
 
-	@Test
-	public void solution() {
+    public static void main(String[] args) {
+        // 测试用例1：N=10, k=8
+        System.out.println("=== 测试用例1：N=10, k=8 ===");
+        Node head1 = init(10);
+        print(head1);
+        System.out.println("倒数第8个节点: " + FindKthToTail(head1, 8).data);
 
-		int N = 10;
-		int K = 8;
+        // 测试用例2：k=1（删除最后一个节点）
+        System.out.println("\n=== 测试用例2：N=5, k=1 ===");
+        Node head2 = init(5);
+        print(head2);
+        System.out.println("倒数第1个节点: " + FindKthToTail(head2, 1).data);
 
-		Node head = init(N);
-		print(head);
+        // 测试用例3：k等于链表长度（删除头节点）
+        System.out.println("\n=== 测试用例3：N=5, k=5 ===");
+        Node head3 = init(5);
+        print(head3);
+        System.out.println("倒数第5个节点: " + FindKthToTail(head3, 5).data);
 
-		removeLastKthNode(head, K);
+        // 测试用例4：k大于链表长度
+        System.out.println("\n=== 测试用例4：N=5, k=10 ===");
+        Node head4 = init(5);
+        Node result = FindKthToTail(head4, 10);
+        System.out.println("倒数第10个节点: " + (result == null ? "null" : result.data));
 
-		print(head);
-	}
+        // 测试用例5：单节点链表
+        System.out.println("\n=== 测试用例5：N=1, k=1 ===");
+        Node head5 = init(1);
+        System.out.println("倒数第1个节点: " + FindKthToTail(head5, 1).data);
+    }
 
-	/**
-	 * 思路1：找到并删除倒数第K个节点。（需要遍历链表两次，效率低）
-	 */
-	public void removeLastKthNode(Node head, int k) {
-		if (head == null || k <= 0) {
-			return;
-		}
+    /**
+     * 方法1：遍历两次法
+     * 倒数第k个 = 正数第N-k+1个
+     */
+    public static Node removeLastKthNode(Node head, int k) {
+        if (head == null || k <= 0) {
+            return head;
+        }
 
-		Node p = head;
-		while (p != null) {
-			p = p.next;
-			k--;
-		}
+        Node p = head;
+        int n = 0;
+        while (p != null) {
+            p = p.next;
+            n++;
+        }
 
-		if (k == 0) {
-			System.out.println("remove node:" + head.data);
-			head = head.next;
-			return;
-		}
+        if (k > n) {
+            return head;
+        }
 
-		if (k < 0) {
-			p = head;
-			while (++k != 0) {
-				p = p.next;
-			}
-			System.out.println("remove node:" + p.next.data);
-			p.next = p.next.next;
-		}
-		return;
-	}
+        if (k == n) {
+            return head.next;
+        }
 
-	/**
-	 * 思路2：找到倒数第K个节点。（需要两个指针，遍历一次链表，效率高）
-	 */
-	public static Node FindKthToTail(Node head, int k) {
-		if (head == null || k == 0) {
-			return null;
-		}
+        p = head;
+        for (int i = 1; i < n - k; i++) {
+            p = p.next;
+        }
+        p.next = p.next.next;
+        return head;
+    }
 
-		Node ahead = head;
-		Node behind = null;
+    /**
+     * 方法2（最优）：先后指针法，只遍历一次
+     *
+     * @param head 链表头节点
+     * @param k    倒数第k个
+     * @return 倒数第k个节点，不存在返回null
+     */
+    public static Node FindKthToTail(Node head, int k) {
+        if (head == null || k <= 0) {
+            return null;
+        }
 
-		for (int i = 0; i < k - 1; i++) {
-			if (ahead.next != null) {
-				ahead = ahead.next;
-			} else {
-				return null;
-			}
-		}
+        Node ahead = head;
+        Node behind = head;
 
-		behind = head;
-		while (ahead.next != null) {
-			ahead = ahead.next;
-			behind = behind.next;
-		}
+        // ahead先走k-1步
+        for (int i = 0; i < k - 1; i++) {
+            if (ahead.next != null) {
+                ahead = ahead.next;
+            } else {
+                return null;
+            }
+        }
 
-		return behind;
-	}
+        // ahead和behind同时走
+        while (ahead.next != null) {
+            ahead = ahead.next;
+            behind = behind.next;
+        }
 
-	/**
-	 * 构建单链表（头插入法，拥有头结点）
-	 */
-	// private Node init(int N) {
-	// // 头结点
-	// Node head = new Node(-1, null);
-	// // 构建单链表（头插入）
-	// for (int i = 1; i <= N; i++) {
-	// Node node = new Node(i, head.next);
-	// head.next = node;
-	// }
-	// return head;
-	// }
+        return behind;
+    }
 
-	/**
-	 * 构建单链表（头插入法，无头结点）
-	 */
-	private Node init(int N) {
-		Node head = null;
-		// 构建单链表（头插入）
-		for (int i = 1; i <= N; i++) {
-			Node node = new Node(i, head);
-			head = node;
-		}
-		return head;
-	}
+    /**
+     * 构建单链表（头插法，无头结点）
+     */
+    private static Node init(int N) {
+        Node head = null;
+        for (int i = 1; i <= N; i++) {
+            Node node = new Node(i, head);
+            head = node;
+        }
+        return head;
+    }
 
-	private void print(Node head) {
-		System.out.print("链表：");
-		for (Node p = head; p != null; p = p.next) {
-			System.out.print(p.data + "->");
-		}
-		System.out.println();
-	}
+    private static void print(Node head) {
+        System.out.print("链表：");
+        for (Node p = head; p != null; p = p.next) {
+            System.out.print(p.data + "->");
+        }
+        System.out.println();
+    }
 
-	/**
-	 * 链表的节点
-	 */
-	static class Node {
-		int data;
-		Node next;
+    static class Node {
+        int data;
+        Node next;
 
-		Node(int data, Node next) {
-			this.data = data;
-			this.next = next;
-		}
-	}
-
+        Node(int data, Node next) {
+            this.data = data;
+            this.next = next;
+        }
+    }
 }

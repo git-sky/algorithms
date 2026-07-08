@@ -3,109 +3,113 @@ package cn.com.sky.algorithms.interview.stack_queue;
 import java.util.LinkedList;
 
 /**
+ * <pre>
  * 滑动窗口最大值【Hard】
- * 
- * 给定一个数组 arr 和窗口大小 w，返回每个窗口的最大值。
- * 
- * 算法原理（单调队列）：
- * 使用双端队列维护窗口内的最大值索引，保持队列中的索引对应的元素单调递减：
- * 1. 遍历数组，对于每个元素：
- *    - 从队列尾部移除所有小于等于当前元素的索引
- *    - 将当前索引加入队列尾部
- *    - 如果队列头部索引已经不在窗口内，移除它
- *    - 当遍历到窗口大小后，队列头部就是当前窗口的最大值
- * 
- * 时间复杂度：O(n)，每个元素最多入队和出队一次
- * 空间复杂度：O(w)，队列最多存储窗口大小的元素
+ *
+ * 题目：给定一个数组和滑动窗口大小w，求滑动窗口中最大值组成的数组。
+ * 例如：数组[4,3,5,4,3,3,6,7]，窗口大小w=3
+ * 结果：[5,5,5,4,6,7]
+ *
+ * 算法原理（单调双端队列法，最优）：
+ * 1. 使用双端队列qmax存储数组下标，保持队列中下标对应的值从大到小排列
+ * 2. 遍历数组时：
+ *    - 如果当前值 >= 队尾下标对应的值，弹出队尾（保持单调递减）
+ *    - 将当前下标加入队尾
+ *    - 如果队头下标已过期（i - qmax.peekFirst() >= w），弹出队头
+ * 3. 当i >= w-1时，队头下标对应的值就是当前窗口的最大值
+ *
+ * 为什么是最优？
+ * - 每个元素最多入队出队各一次，总时间O(n)
+ * - 暴力法每个窗口遍历w个元素，总时间O(n*w)
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(w)
+ * </pre>
  */
 public class WinMaxArray {
 
     public static void main(String[] args) {
-        WinMaxArray solution = new WinMaxArray();
-        
         // 测试用例1：正常情况
+        System.out.println("=== 测试用例1：正常情况 ===");
         int[] arr1 = {4, 3, 5, 4, 3, 3, 6, 7};
-        int[] result1 = solution.getMaxArray(arr1, 3);
-        printArray(result1); // [5,5,5,4,6,7]
-        
+        int[] result1 = getMaxWindow(arr1, 3);
+        System.out.print("滑动窗口最大值: ");
+        for (int val : result1) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+
         // 测试用例2：窗口大小为1
-        int[] arr2 = {1, 2, 3, 4};
-        int[] result2 = solution.getMaxArray(arr2, 1);
-        printArray(result2); // [1,2,3,4]
-        
+        System.out.println("\n=== 测试用例2：窗口大小为1 ===");
+        int[] arr2 = {1, 2, 3, 4, 5};
+        int[] result2 = getMaxWindow(arr2, 1);
+        for (int val : result2) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+
         // 测试用例3：窗口大小等于数组长度
-        int[] arr3 = {5, 3, 1, 2, 4};
-        int[] result3 = solution.getMaxArray(arr3, 5);
-        printArray(result3); // [5]
-        
-        // 测试用例4：空数组
-        int[] result4 = solution.getMaxArray(null, 3);
-        printArray(result4); // null
-        
-        // 测试用例5：窗口大于数组长度
-        int[] arr5 = {1, 2};
-        int[] result5 = solution.getMaxArray(arr5, 3);
-        printArray(result5); // null
-        
-        // 测试用例6：递减数组
-        int[] arr6 = {6, 5, 4, 3, 2, 1};
-        int[] result6 = solution.getMaxArray(arr6, 3);
-        printArray(result6); // [6,5,4,3]
-        
-        // 测试用例7：递增数组
-        int[] arr7 = {1, 2, 3, 4, 5, 6};
-        int[] result7 = solution.getMaxArray(arr7, 3);
-        printArray(result7); // [3,4,5,6]
+        System.out.println("\n=== 测试用例3：窗口大小等于数组长度 ===");
+        int[] arr3 = {1, 3, 2, 5, 4};
+        int[] result3 = getMaxWindow(arr3, 5);
+        for (int val : result3) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+
+        // 测试用例4：递减数组
+        System.out.println("\n=== 测试用例4：递减数组 ===");
+        int[] arr4 = {5, 4, 3, 2, 1};
+        int[] result4 = getMaxWindow(arr4, 3);
+        for (int val : result4) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+
+        // 测试用例5：递增数组
+        System.out.println("\n=== 测试用例5：递增数组 ===");
+        int[] arr5 = {1, 2, 3, 4, 5};
+        int[] result5 = getMaxWindow(arr5, 3);
+        for (int val : result5) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
     }
 
     /**
-     * 打印数组
+     * 求滑动窗口最大值（单调双端队列法，最优）
+     *
+     * @param arr 数组
+     * @param w   窗口大小
+     * @return 每个窗口的最大值组成的数组
      */
-    private static void printArray(int[] arr) {
-        if (arr == null) {
-            System.out.println("null");
-            return;
-        }
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < arr.length; i++) {
-            sb.append(arr[i]);
-            if (i < arr.length - 1) {
-                sb.append(",");
-            }
-        }
-        sb.append("]");
-        System.out.println(sb.toString());
-    }
-
-    public int[] getMaxArray(int[] arr, int w) {
+    public static int[] getMaxWindow(int[] arr, int w) {
         if (arr == null || w < 1 || arr.length < w) {
             return null;
         }
 
-        int[] result = new int[arr.length - w + 1];
         LinkedList<Integer> qmax = new LinkedList<>();
+        int[] res = new int[arr.length - w + 1];
         int index = 0;
 
         for (int i = 0; i < arr.length; i++) {
-            // 从尾部移除所有小于等于当前元素的索引
+            // 保持队列单调递减：弹出所有比当前值小的队尾元素
             while (!qmax.isEmpty() && arr[qmax.peekLast()] <= arr[i]) {
                 qmax.pollLast();
             }
-            
-            // 将当前索引加入队列
             qmax.addLast(i);
 
-            // 如果队列头部索引已经不在窗口内，移除它
+            // 弹出过期的队头元素
             if (qmax.peekFirst() == i - w) {
                 qmax.pollFirst();
             }
 
-            // 当遍历到窗口大小后，记录最大值
+            // 当窗口形成后，记录最大值
             if (i >= w - 1) {
-                result[index++] = arr[qmax.peekFirst()];
+                res[index++] = arr[qmax.peekFirst()];
             }
         }
 
-        return result;
+        return res;
     }
 }

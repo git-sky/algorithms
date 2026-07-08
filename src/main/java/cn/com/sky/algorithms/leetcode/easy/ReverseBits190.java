@@ -1,74 +1,59 @@
 package cn.com.sky.algorithms.leetcode.easy;
 
-import org.junit.Test;
-
 /**
  * <pre>
- *
- * 190. Reverse Bits
- *
- * Reverse bits of a given 32 bits unsigned integer.
- *
- * For example, given input 43261596 (represented in binary as 00000010100101000001111010011100), 
- * return 964176192 (represented in binary as 00111001011110000010100101000000).
- *
- * Follow up:
- * If this function is called many times, how would you optimize it?
- *
- * Related problem: Reverse Integer
- *
+ * LeetCode 190. 颠倒二进制位【Easy】
+ * 
+ * 题目描述：颠倒给定的 32 位无符号整数的二进制位。
+ * 
+ * 示例：
+ * 输入：43261596（二进制 00000010100101000001111010011100）
+ * 输出：964176192（二进制 00111001011110000010100101000000）
+ * 
+ * 算法原理（逐位处理）：
+ * 1. 初始化结果为 0
+ * 2. 每次取 n 的最低位（n & 1），加到结果中
+ * 3. 结果左移一位，n 右移一位
+ * 4. 重复 32 次
+ * 
+ * 进阶：如果函数被多次调用，可以使用查表法或分治法优化
+ * - 查表法：预计算 256 个字节的反转结果
+ * - 分治法：依次交换16位、8位、4位、2位、1位
+ * 
+ * 时间复杂度：O(1)，固定32次操作
+ * 空间复杂度：O(1)
  * </pre>
  */
 public class ReverseBits190 {
 
-	@Test
-	public void solution() {
-		int n = 43261596;
-		System.out.println("输入: " + n);
-		System.out.println("二进制: " + Integer.toBinaryString(n));
-		
-		int result1 = reverseBits1(n);
-		System.out.println("方法1结果: " + result1);
-		System.out.println("方法1二进制: " + Integer.toBinaryString(result1));
-		
-		int result2 = reverseBits2(n);
-		System.out.println("方法2结果: " + result2);
-		
-		int result3 = reverseBits3(n);
-		System.out.println("方法3结果: " + result3);
-	}
+    public static void main(String[] args) {
+        ReverseBits190 solution = new ReverseBits190();
 
-	/**
-	 * 方法1：逐位处理
-	 */
-	public int reverseBits1(int n) {
-		int result = 0;
-		for (int i = 0; i < 32; i++) {
-			result += n & 1;
-			n >>>= 1; // 无符号右移
-			if (i < 31) // 最后一位不移位
-				result <<= 1;
-		}
-		return result;
-	}
+        // 测试用例1：正常情况
+        int n1 = 43261596;
+        System.out.println("测试用例1: 输入=" + n1);
+        System.out.println("结果: " + solution.reverseBits(n1)); // 964176192
 
-	/**
-	 * 方法2：另一种逐位处理方式
-	 */
-	public int reverseBits2(int n) {
-		int result = 0;
-		for (int i = 0; i < 32; i++) {
-			result <<= 1;
-			result += n & 1;
-			n >>>= 1;
-		}
-		return result;
-	}
+        // 测试用例2：全0
+        System.out.println("测试用例2: " + solution.reverseBits(0)); // 0
 
-	/**
-	 * 方法3：使用Java内置函数
-	 */
-	public int reverseBits3(int n) {
-		return Integer.reverse(n);
-	}
+        // 测试用例3：全1（-1的补码）
+        System.out.println("测试用例3: " + solution.reverseBits(-1)); // -1
+
+        // 测试用例4：1
+        System.out.println("测试用例4: " + solution.reverseBits(1)); // -2147483648
+
+        // 测试用例5：2的31次方
+        System.out.println("测试用例5: " + solution.reverseBits(Integer.MIN_VALUE)); // 1
+    }
+
+    public int reverseBits(int n) {
+        int result = 0;
+        for (int i = 0; i < 32; i++) {
+            result <<= 1;
+            result += n & 1;
+            n >>>= 1;
+        }
+        return result;
+    }
 }
