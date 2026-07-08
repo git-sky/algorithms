@@ -4,7 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 统计字符串中各个字符的个数，并打印出现次数最多的字符
+ * <pre>
+ * 字符频率统计【Easy】
+ *
+ * 题目：统计字符串中各个字符的出现次数，并找出出现次数最多的字符
+ *
+ * 算法原理：
+ * 1. 使用HashMap统计每个字符的出现次数
+ * 2. 遍历Map找到出现次数最多的字符
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(k)，k为不同字符数
+ * </pre>
  */
 public class Search {
 

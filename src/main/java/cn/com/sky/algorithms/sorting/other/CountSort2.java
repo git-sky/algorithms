@@ -1,10 +1,17 @@
 package cn.com.sky.algorithms.sorting.other;
 
 /**
- * 计数排序
- * 
- * 针对c数组的大小，优化过的计数排序
- * 
+ * <pre>
+ * 计数排序（优化版）【Medium】
+ *
+ * 优化点：通过计算max-min缩小计数数组大小
+ * 原版：计数数组大小为max+1，当min很大时浪费空间
+ * 优化：计数数组大小为max-min+1，元素映射为a[i]-min
+ *
+ * 时间复杂度：O(n + k)，k = max - min + 1
+ * 空间复杂度：O(n + k)
+ * 稳定性：稳定
+ * </pre>
  */
 public class CountSort2 {
 	public static void main(String[] args) {

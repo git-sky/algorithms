@@ -4,12 +4,35 @@ import java.util.Map;
 
 
 /**
- * The simple implementation of B+-Tree, reference http://en.wikipedia.org/wiki/B%2B_tree
- * 
- * @author bo.fangbo
+ * <pre>
+ * B+树（B+ Tree）【Hard】
  *
- * @param <T>
- * @param <V>
+ * 题目：实现B+树的插入、查找操作
+ *
+ * 算法原理：
+ * 1. B树的变体，所有数据存储在叶子节点
+ * 2. 内部节点只存储索引（关键字）
+ * 3. 叶子节点通过双向链表连接
+ * 4. 叶子节点按关键字有序排列
+ *
+ * B+树 vs B树：
+ * - B+树：查询稳定（必须到叶子），范围查询效率高（链表顺序访问）
+ * - B树：查询不稳定（可能提前命中），范围查询需要回溯
+ *
+ * 为什么数据库选择B+树？
+ * 1. 查询性能稳定：每次查询都走相同路径长度
+ * 2. 范围查询高效：叶子节点链表支持顺序扫描
+ * 3. 缓存友好：内部节点只存索引，一个页能放更多索引
+ *
+ * 应用：MySQL InnoDB索引、MongoDB索引
+ *
+ * 时间复杂度：查找 O(log n)，范围查询 O(log n + k)
+ * 空间复杂度：O(n)
+ *
+ * 参考：http://en.wikipedia.org/wiki/B%2B_tree
+ *
+ * @author bo.fangbo
+ * </pre>
  */
 public class BPlusTree <T extends Comparable<T>, V> {
 
@@ -338,5 +361,3 @@ public class BPlusTree <T extends Comparable<T>, V> {
         System.out.println("Success");
     }
 }
-
-

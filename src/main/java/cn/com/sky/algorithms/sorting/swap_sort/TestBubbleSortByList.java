@@ -8,6 +8,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * <pre>
+ * 冒泡排序 - 基于List的实现【Easy】
+ *
+ * 题目：使用ArrayList实现冒泡排序
+ *
+ * 算法原理：
+ * 1. 相邻元素两两比较，如果逆序则交换
+ * 2. 每趟排序将最大元素"冒泡"到末尾
+ * 3. 重复n-1趟
+ *
+ * 注意：List的get/set操作效率低于数组直接访问
+ * 实际应用中，对List排序建议使用Collections.sort()
+ *
+ * 时间复杂度：O(n^2)
+ * 空间复杂度：O(1)
+ * 稳定性：稳定
+ * </pre>
+ */
 public class TestBubbleSortByList {
 
 	List<Integer> list = new ArrayList<Integer>();

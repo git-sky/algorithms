@@ -1,7 +1,23 @@
 package cn.com.sky.algorithms.searching.dynamics.avl;
 
 /**
- * 二叉平衡树简单实现
+ * <pre>
+ * AVL树（简洁实现）【Hard】
+ *
+ * 题目：实现AVL树的插入和四种旋转操作
+ *
+ * 算法原理：
+ * 1. BST基础上维护平衡因子（左右子树高度差）
+ * 2. 插入后检查平衡，不平衡则旋转
+ * 3. 四种旋转：
+ *    - LL型：右旋（rotateWithLeftChild）
+ *    - RR型：左旋（rotateWithRightChild）
+ *    - LR型：先对左子树左旋，再右旋（doubleWithLeftChild）
+ *    - RL型：先对右子树右旋，再左旋（doubleWithRightChild）
+ *
+ * 时间复杂度：查找/插入 O(log n)
+ * 空间复杂度：O(n)
+ * </pre>
  */
 public class TestAvlTree<T extends Comparable<? super T>> {
 	private static class AvlNode<T> {// avl树节点

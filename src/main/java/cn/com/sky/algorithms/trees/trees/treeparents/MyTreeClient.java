@@ -1,5 +1,19 @@
 package cn.com.sky.algorithms.trees.trees.treeparents;
 
+/**
+ * <pre>
+ * 双亲表示法树的测试用例【Easy】
+ *
+ * 构建如下树结构：
+ *         A
+ *       / | \
+ *      B  C  D
+ *     / \  \
+ *    E   F  G
+ *        |
+ *        H
+ * </pre>
+ */
 public class MyTreeClient {
 	public static void main(String[] args) {
 		Node<String> root = new Node<String>("A", -1);

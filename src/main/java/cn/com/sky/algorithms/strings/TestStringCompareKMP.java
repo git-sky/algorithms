@@ -5,7 +5,27 @@ import java.util.Arrays;
 import org.junit.Test;
 
 /**
- * KMP模式匹配算法
+ * <pre>
+ * KMP字符串匹配算法（Knuth-Morris-Pratt）【Medium】
+ *
+ * 题目：在主串中高效查找子串的位置
+ *
+ * 算法原理：
+ * 1. 核心思想：利用已匹配信息，避免主串指针回溯
+ * 2. next数组（部分匹配表）：记录模式串中每个位置的前后缀最长公共长度
+ * 3. 当匹配失败时，根据next数组决定模式串的移动位置
+ *
+ * next数组计算：
+ * - next[j] = 模式串[0...j-1]中，最长相等前后缀的长度 + 1
+ * - 例如："ABCDABD" → [0,0,0,0,1,2,0]
+ *
+ * KMP vs 暴力匹配：
+ * - 暴力匹配：O(m*n)，每次失败都回溯
+ * - KMP：O(m+n)，利用已匹配信息，不回溯
+ *
+ * 时间复杂度：O(m + n)
+ * 空间复杂度：O(n)（next数组）
+ * </pre>
  */
 public class TestStringCompareKMP {
 

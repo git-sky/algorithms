@@ -5,9 +5,25 @@ import org.junit.Test;
 import cn.com.sky.algorithms.sorting.AbstractSort;
 
 /**
- * 插入排序
- * <p>
- * 插入排序就是每一步都将一个待排数据按其大小插入到已经排序的数据中的适当位置，直到全部插入完毕。
+ * <pre>
+ * 插入排序（Insertion Sort）【Easy】
+ *
+ * 题目：实现直接插入排序算法
+ *
+ * 算法原理：
+ * 1. 将数组分为已排序部分和未排序部分（初始时第一个元素为已排序）
+ * 2. 从未排序部分取出一个元素，在已排序部分中找到合适位置插入
+ * 3. 插入位置之后的元素依次后移
+ * 4. 重复直到所有元素都插入完成
+ *
+ * 类似于打扑克牌整理手牌的过程
+ *
+ * 时间复杂度：
+ * - 最坏：O(n^2)（逆序）
+ * - 最好：O(n)（已有序）
+ * 空间复杂度：O(1)
+ * 稳定性：稳定
+ * </pre>
  */
 public class TestInsertSort extends AbstractSort {
 

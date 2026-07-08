@@ -1,47 +1,98 @@
-//package cn.com.sky.algorithms.leetcode.easy;
-//
-//import org.junit.Test;
-//
-///**
-// * <pre>
-// *
-// * 给定非空非负整数数组，数组的度是指数组中出现次数最多元素的个数。寻找最小连续子数组，使得子数组的度与原数组的度相同。返回子数组的长度。
-// *
-// * 697. Degree of an Array
-// *
-// * Given a non-empty array of non-negative integers nums, the degree of this array is defined as the maximum frequency of any one of its elements.
-// *
-// * Your task is to find the smallest possible length of a (contiguous) subarray of nums, that has the same degree as nums.
-// *
-// * Example 1:
-// * Input: [1, 2, 2, 3, 1]
-// * Output: 2
-// * Explanation:
-// * The input array has a degree of 2 because both elements 1 and 2 appear twice.
-// * Of the subarrays that have the same degree:
-// * [1, 2, 2, 3, 1], [1, 2, 2, 3], [2, 2, 3, 1], [1, 2, 2], [2, 2, 3], [2, 2]
-// * The shortest length is 2. So return 2.
-// *
-// * Example 2:
-// * Input: [1,2,2,3,1,4,2]
-// * Output: 6
-// *
-// * Note:
-// * nums.length will be between 1 and 50,000.
-// * nums[i] will be an integer between 0 and 49,999.
-// *
-// * </pre>
-// */
-//public class DegreeOfAnArray697 {
-//
-//	@Test
-//	public void solution() {
-//		int[] A = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
-//		System.out.println(findShortestSubArray(A));
-//	}
-//
-//	public int findShortestSubArray(int[] nums) {
-//
-//	}
-//
-//}
+package cn.com.sky.algorithms.leetcode.easy;
+
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * <pre>
+ *
+ * 697. Degree of an Array【Easy】
+ *
+ * 给定非空非负整数数组，数组的度是指数组中出现次数最多元素的个数。
+ * 寻找最小连续子数组，使得子数组的度与原数组的度相同。返回子数组的长度。
+ *
+ * 示例 1:
+ * 输入: [1, 2, 2, 3, 1]
+ * 输出: 2
+ * 解释:
+ * 输入数组的度是2，因为元素1和2都出现了两次。
+ * 具有相同度的子数组包括：
+ * [1, 2, 2, 3, 1], [1, 2, 2, 3], [2, 2, 3, 1], [1, 2, 2], [2, 2, 3], [2, 2]
+ * 最短长度是2，所以返回2。
+ *
+ * 示例 2:
+ * 输入: [1,2,2,3,1,4,2]
+ * 输出: 6
+ *
+ * 算法原理：
+ * 使用HashMap记录每个元素的信息：
+ * - 出现次数（用于计算度）
+ * - 首次出现位置
+ * - 最后一次出现位置
+ *
+ * 步骤：
+ * 1. 遍历数组，统计每个元素的频率、起始和结束位置
+ * 2. 找到最大频率（即数组的度）
+ * 3. 对于所有频率等于度的元素，计算其最后位置-起始位置+1
+ * 4. 返回最小长度
+ *
+ * 时间复杂度：O(n)
+ * 空间复杂度：O(n)
+ *
+ * </pre>
+ */
+public class DegreeOfAnArray697 {
+
+    @Test
+    public void solution() {
+        int[] test1 = {1, 2, 2, 3, 1};
+        System.out.println("测试用例1: " + findShortestSubArray(test1)); // 2
+
+        int[] test2 = {1, 2, 2, 3, 1, 4, 2};
+        System.out.println("测试用例2: " + findShortestSubArray(test2)); // 6
+
+        int[] test3 = {1};
+        System.out.println("测试用例3(单元素): " + findShortestSubArray(test3)); // 1
+
+        int[] test4 = {1, 2, 3, 4, 5};
+        System.out.println("测试用例4(无重复): " + findShortestSubArray(test4)); // 1
+
+        int[] test5 = {2, 1, 1, 2, 1, 3, 3, 3, 1, 3, 1, 3, 2};
+        System.out.println("测试用例5(复杂情况): " + findShortestSubArray(test5)); // 7
+    }
+
+    public int findShortestSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        Map<Integer, int[]> map = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (!map.containsKey(nums[i])) {
+                map.put(nums[i], new int[]{1, i, i});
+            } else {
+                int[] temp = map.get(nums[i]);
+                temp[0]++;
+                temp[2] = i;
+            }
+        }
+
+        int maxFreq = 0;
+        int minLen = Integer.MAX_VALUE;
+
+        for (int[] value : map.values()) {
+            if (value[0] > maxFreq) {
+                maxFreq = value[0];
+                minLen = value[2] - value[1] + 1;
+            } else if (value[0] == maxFreq) {
+                minLen = Math.min(minLen, value[2] - value[1] + 1);
+            }
+        }
+
+        return minLen;
+    }
+
+}

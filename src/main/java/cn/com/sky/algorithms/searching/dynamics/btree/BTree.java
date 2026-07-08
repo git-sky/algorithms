@@ -4,9 +4,31 @@ import java.util.ArrayList;
 import java.util.LinkedList;  
 import java.util.List;  
   
-/* 
- * Author: Robert Liu 
- */  
+/**
+ * <pre>
+ * B树（B-Tree）【Hard】
+ *
+ * 题目：实现多路平衡查找树（B树）
+ *
+ * 算法原理：
+ * 1. 一种自平衡的多叉搜索树
+ * 2. 每个节点最多有m个子节点，m-1个关键字
+ * 3. 根节点至少有2个子节点（除非是叶子）
+ * 4. 非根非叶子节点至少有⌈m/2⌉个子节点
+ * 5. 所有叶子节点在同一层
+ *
+ * B树 vs B+树：
+ * - B树：数据存储在所有节点，每个节点存数据和指针
+ * - B+树：数据只存在叶子节点，叶子节点通过链表连接
+ *
+ * 应用：数据库索引（MySQL InnoDB使用B+树）、文件系统
+ *
+ * 时间复杂度：查找/插入/删除 O(log n)
+ * 空间复杂度：O(n)
+ *
+ * Author: Robert Liu
+ * </pre>
+ */ 
 public class BTree<E extends Comparable<E>> {  
     private BTNode root = null;  
     private int t;  

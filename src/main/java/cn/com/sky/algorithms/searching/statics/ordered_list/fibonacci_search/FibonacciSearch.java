@@ -1,7 +1,28 @@
 package cn.com.sky.algorithms.searching.statics.ordered_list.fibonacci_search;
 
 /**
- * 斐波那契查找
+ * <pre>
+ * 斐波那契查找（Fibonacci Search）【Medium】
+ *
+ * 题目：实现斐波那契查找算法
+ *
+ * 算法原理：
+ * 1. 利用斐波那契数列的性质：F[k] = F[k-1] + F[k-2]
+ * 2. 将数组长度扩展到最近的斐波那契数-1
+ * 3. 使用斐波那契数列来确定分割点
+ * 4. mid = low + F[k-1] - 1
+ *
+ * 为什么使用斐波那契？
+ * - 黄金分割比例（约0.618）接近最优分割点
+ * - 只涉及加减法，不涉及除法，效率高
+ *
+ * 时间复杂度：O(log n)
+ * 空间复杂度：O(1)
+ *
+ * 与二分查找对比：
+ * - 二分查找：mid = (low+high)/2，除法运算
+ * - 斐波那契：mid = low+F[k-1]-1，加减法运算（更快）
+ * </pre>
  */
 public class FibonacciSearch {
 

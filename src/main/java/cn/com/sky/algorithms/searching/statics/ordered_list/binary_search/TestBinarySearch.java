@@ -3,7 +3,25 @@ package cn.com.sky.algorithms.searching.statics.ordered_list.binary_search;
 import org.junit.Test;
 
 /**
- * 二分查找/折半查找
+ * <pre>
+ * 二分查找（Binary Search）【Easy】
+ *
+ * 题目：在有序数组中查找目标值的位置
+ *
+ * 算法原理：
+ * 1. 取中间位置元素与目标值比较
+ * 2. 如果相等，返回当前位置
+ * 3. 如果目标值小于中间值，在左半部分继续查找
+ * 4. 如果目标值大于中间值，在右半部分继续查找
+ * 5. 重复直到找到或区间为空
+ *
+ * 前提条件：数组必须有序
+ *
+ * 时间复杂度：O(log n)
+ * 空间复杂度：
+ * - 递归实现：O(log n)（栈空间）
+ * - 迭代实现：O(1)
+ * </pre>
  */
 public class TestBinarySearch {
 	// 获取递归的次数

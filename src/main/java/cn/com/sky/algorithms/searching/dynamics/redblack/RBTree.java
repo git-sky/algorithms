@@ -1,8 +1,30 @@
 package cn.com.sky.algorithms.searching.dynamics.redblack;
 
 /**
- * 红黑树
+ * <pre>
+ * 红黑树（Red-Black Tree）【Hard】
  *
+ * 题目：实现红黑树的插入、删除、查找操作
+ *
+ * 红黑树五大性质：
+ * 1. 每个节点是红色或黑色
+ * 2. 根节点是黑色
+ * 3. 每个叶子节点（NIL）是黑色
+ * 4. 红色节点的两个子节点必须都是黑色（不能有连续红节点）
+ * 5. 从任一节点到其每个叶子的所有路径都包含相同数目的黑色节点
+ *
+ * 插入修复：通过变色和旋转维持红黑性质
+ * 删除修复：通过变色和旋转维持红黑性质
+ *
+ * 红黑树 vs AVL树：
+ * - 红黑树：近似平衡，插入/删除最多3次旋转，适合写多场景
+ * - AVL树：严格平衡，查找更快，插入/删除可能多次旋转，适合读多场景
+ *
+ * 应用：Java TreeMap/TreeSet、Linux CFS调度器、epoll事件管理
+ *
+ * 时间复杂度：查找/插入/删除 O(log n)
+ * 空间复杂度：O(n)
+ * </pre>
  */
 public class RBTree<T extends Comparable<T>> {
 

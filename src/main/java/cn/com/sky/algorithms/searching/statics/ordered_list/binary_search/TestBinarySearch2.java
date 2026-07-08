@@ -1,14 +1,24 @@
 package cn.com.sky.algorithms.searching.statics.ordered_list.binary_search;
 
 /**
- * 
  * <pre>
- * 
- * 二分查找又称折半查找，它是一种效率较高的查找方法。 　　
- * 【二分查找要求】：1.必须采用顺序存储结构 2.必须按关键字大小有序排列。
- * 
+ * 二分查找（Binary Search）- 简洁实现【Easy】
+ *
+ * 题目：在有序数组中查找目标值的位置
+ *
+ * 算法原理：
+ * 1. 取中间位置元素与目标值比较
+ * 2. 相等返回，小于在左半查找，大于在右半查找
+ *
+ * 前提条件：必须采用顺序存储结构，且按关键字大小有序排列
+ *
+ * 中值计算注意：
+ * - (low + high) / 2 可能溢出
+ * - 推荐使用：low + (high - low) / 2 或 (low + high) >>> 1
+ *
+ * 时间复杂度：O(log n)
+ * 空间复杂度：O(1)（迭代）/ O(log n)（递归）
  * </pre>
- * 
  */
 public class TestBinarySearch2 {
 	public static void main(String[] args) {

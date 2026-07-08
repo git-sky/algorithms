@@ -5,6 +5,22 @@ import java.util.Random;
 
 import org.junit.Test;
 
+/**
+ * <pre>
+ * 冒泡排序 vs 选择排序 性能对比【Easy】
+ *
+ * 题目：对比冒泡排序和选择排序的实际运行时间
+ *
+ * 冒泡排序：相邻元素比较交换，每趟确定一个最大值
+ * 选择排序：记录最小值位置，每趟交换一次
+ *
+ * 理论对比：
+ * - 两者时间复杂度都是O(n^2)
+ * - 冒泡排序交换次数多（O(n^2)次），选择排序交换少（O(n)次）
+ * - 冒泡排序稳定，选择排序不稳定
+ * - 实际运行中，选择排序通常更快（交换次数少）
+ * </pre>
+ */
 public class TestBubbleSort {
 
 	Random random = new Random();

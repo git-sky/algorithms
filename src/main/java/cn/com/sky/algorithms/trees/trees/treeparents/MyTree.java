@@ -4,6 +4,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * <pre>
+ * 树的双亲表示法实现【Easy】
+ *
+ * 算法原理：
+ * 1. 使用数组存储所有节点
+ * 2. 每个节点记录其父节点在数组中的索引
+ * 3. 根节点的parent值为-1
+ *
+ * 优点：找父节点O(1)
+ * 缺点：找孩子节点需要遍历O(n)
+ *
+ * 时间复杂度：
+ * - 添加节点：O(n)
+ * - 查找父节点：O(1)
+ * - 求深度：O(n^2)（每个节点向上追溯到根）
+ * </pre>
+ */
 public class MyTree<T> {
 	private final int DEFAULT_SIZE = 2;
 	private int size;
