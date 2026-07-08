@@ -1,50 +1,30 @@
 package cn.com.sky.algorithms.sorting.insert_sort;
 
-/******************************************************************************
- *  Compilation:  javac Insertion.java
- *  Execution:    java Insertion < input.txt
- *  Dependencies: StdOut.java StdIn.java
- *  Data files:   http://algs4.cs.princeton.edu/21sort/tiny.txt
- *                http://algs4.cs.princeton.edu/21sort/words3.txt
- *  
- *  Sorts a sequence of strings from standard input using insertion sort.
- *
- *  % more tiny.txt
- *  S O R T E X A M P L E
- *
- *  % java Insertion < tiny.txt
- *  A E E L M O P R S T X                 [ one string per line ]
- *
- *  % more words3.txt
- *  bed bug dad yes zoo ... all bad yet
- *
- *  % java Insertion < words3.txt
- *  all bad bed bug dad ... yes yet zoo   [ one string per line ]
- *
- ******************************************************************************/
-
-import java.util.Arrays;
-import java.util.Comparator;
-
 /**
- * The <tt>Insertion</tt> class provides static methods for sorting an array using insertion sort.
- * <p>
- * This implementation makes ~ 1/2 N^2 compares and exchanges in the worst case, so it is not
- * suitable for sorting large arbitrary arrays. More precisely, the number of exchanges is exactly
- * equal to the number of inversions. So, for example, it sorts a partially-sorted array in linear
- * time.
- * <p>
- * The sorting algorithm is stable and uses O(1) extra memory.
- * <p>
- * See <a
- * href="http://algs4.cs.princeton.edu/21elementary/InsertionPedantic.java.html">InsertionPedantic
- * .java</a> for a version that eliminates the compiler warning.
- * <p>
- * For additional documentation, see <a href="http://algs4.cs.princeton.edu/21elementary">Section
- * 2.1</a> of <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ * <pre>
+ * 插入排序（Insertion Sort）- Princeton标准实现【Easy】
  *
- * @author Robert Sedgewick
- * @author Kevin Wayne
+ * 题目：实现插入排序（支持Comparable和Comparator）
+ *
+ * 算法原理：
+ * 1. 将数组分为已排序和未排序部分
+ * 2. 从未排序部分取出元素，在已排序部分中找到位置插入
+ * 3. 插入时将较大元素右移
+ *
+ * 特点：
+ * - 交换次数等于逆序对数量
+ * - 对部分有序数组效率接近O(n)
+ * - 稳定排序，使用O(1)额外空间
+ *
+ * 时间复杂度：
+ * - 最坏：O(n^2)（逆序）
+ * - 最好：O(n)（已有序）
+ * - 平均：O(n^2)
+ * 空间复杂度：O(1)
+ * 稳定性：稳定
+ *
+ * 参考：Algorithms, 4th Edition - Robert Sedgewick, Kevin Wayne
+ * </pre>
  */
 public class Insertion {
 

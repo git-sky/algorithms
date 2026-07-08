@@ -1,6 +1,19 @@
 package cn.com.sky.algorithms.searching.dynamics.redblack;
 
 /**
+ * <pre>
+ * 红黑树测试用例【Hard】
+ *
+ * 测试内容：
+ * 1. 插入操作：插入10个节点，验证红黑性质
+ * 2. 遍历操作：先序、中序、后序遍历
+ * 3. 查找最值：最小值、最大值
+ * 4. 删除操作：删除所有节点（可选开启调试模式）
+ *
+ * 调试开关：
+ * - mDebugInsert：打印每次插入后的树结构
+ * - mDebugDelete：打印每次删除后的树结构
+ * </pre>
  */
 public class RBTreeTest {
 

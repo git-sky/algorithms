@@ -9,6 +9,19 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+/**
+ * <pre>
+ * 排序算法基类【Reference】
+ *
+ * 功能：
+ * 1. 自动生成随机测试数据
+ * 2. 每次测试前克隆数组，保证测试独立性
+ * 3. 使用JDK Arrays.sort()生成标准答案
+ * 4. 测试后自动验证排序结果正确性
+ *
+ * 子类只需实现sort()方法即可
+ * </pre>
+ */
 public abstract class AbstractSort implements Sortable {
 
 	static Random random = new Random();
