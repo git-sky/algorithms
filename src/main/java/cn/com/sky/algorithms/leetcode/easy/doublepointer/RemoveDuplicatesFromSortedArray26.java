@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.leetcode.easy;
+package cn.com.sky.algorithms.leetcode.easy.doublepointer;
 
 import java.util.Arrays;
 

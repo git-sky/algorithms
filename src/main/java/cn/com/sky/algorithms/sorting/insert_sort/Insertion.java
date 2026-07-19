@@ -1,5 +1,8 @@
 package cn.com.sky.algorithms.sorting.insert_sort;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * <pre>
  * 插入排序（Insertion Sort）- Princeton标准实现【Easy】

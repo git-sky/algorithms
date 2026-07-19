@@ -13,6 +13,83 @@ import org.junit.Test;
  */
 public class MergeTwoSortedLists21 {
 
+    /**
+     * 方法一：迭代法（推荐）
+     * 使用虚拟头节点简化边界处理，遍历两个链表并比较节点值。
+     * <p>
+     * 时间复杂度：O(n + m)，其中 n 和 m 分别是两个链表的长度
+     * 空间复杂度：O(1)，只使用了常数级别的额外空间
+     */
+    public ListNode mergeTwoListsIterative(ListNode list1, ListNode list2) {
+        // 创建虚拟头节点，简化边界条件处理
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+
+        // 遍历两个链表
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
+                curr.next = list1;
+                list1 = list1.next;
+            } else {
+                curr.next = list2;
+                list2 = list2.next;
+            }
+            curr = curr.next;
+        }
+
+        // 连接剩余的节点
+        curr.next = list1 != null ? list1 : list2;
+
+        return dummy.next;
+    }
+
+    /**
+     * 方法二：递归法
+     * 将问题分解为子问题：比较两个链表的头节点，较小的节点作为合并后链表的头节点，
+     * 然后递归合并剩余部分。
+     * <p>
+     * 时间复杂度：O(n + m)
+     * 空间复杂度：O(n + m)，递归调用栈的深度
+     */
+    public ListNode mergeTwoListsRecursive(ListNode list1, ListNode list2) {
+        // 递归终止条件
+        if (list1 == null) {
+            return list2;
+        }
+        if (list2 == null) {
+            return list1;
+        }
+
+        // 选择较小的节点作为当前节点
+        if (list1.val <= list2.val) {
+            list1.next = mergeTwoListsRecursive(list1.next, list2);
+            return list1;
+        } else {
+            list2.next = mergeTwoListsRecursive(list1, list2.next);
+            return list2;
+        }
+    }
+
+    /**
+     * 链表节点定义
+     */
+    public class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+
     @Test
     public void test() {
         // 测试用例1：正常情况
@@ -108,80 +185,5 @@ public class MergeTwoSortedLists21 {
         System.out.println();
     }
 
-    /**
-     * 方法一：迭代法（推荐）
-     * 使用虚拟头节点简化边界处理，遍历两个链表并比较节点值。
-     * <p>
-     * 时间复杂度：O(n + m)，其中 n 和 m 分别是两个链表的长度
-     * 空间复杂度：O(1)，只使用了常数级别的额外空间
-     */
-    public ListNode mergeTwoListsIterative(ListNode list1, ListNode list2) {
-        // 创建虚拟头节点，简化边界条件处理
-        ListNode dummy = new ListNode(-1);
-        ListNode curr = dummy;
 
-        // 遍历两个链表
-        while (list1 != null && list2 != null) {
-            if (list1.val <= list2.val) {
-                curr.next = list1;
-                list1 = list1.next;
-            } else {
-                curr.next = list2;
-                list2 = list2.next;
-            }
-            curr = curr.next;
-        }
-
-        // 连接剩余的节点
-        curr.next = list1 != null ? list1 : list2;
-
-        return dummy.next;
-    }
-
-    /**
-     * 方法二：递归法
-     * 将问题分解为子问题：比较两个链表的头节点，较小的节点作为合并后链表的头节点，
-     * 然后递归合并剩余部分。
-     * <p>
-     * 时间复杂度：O(n + m)
-     * 空间复杂度：O(n + m)，递归调用栈的深度
-     */
-    public ListNode mergeTwoListsRecursive(ListNode list1, ListNode list2) {
-        // 递归终止条件
-        if (list1 == null) {
-            return list2;
-        }
-        if (list2 == null) {
-            return list1;
-        }
-
-        // 选择较小的节点作为当前节点
-        if (list1.val <= list2.val) {
-            list1.next = mergeTwoListsRecursive(list1.next, list2);
-            return list1;
-        } else {
-            list2.next = mergeTwoListsRecursive(list1, list2.next);
-            return list2;
-        }
-    }
-
-    /**
-     * 链表节点定义
-     */
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
 }

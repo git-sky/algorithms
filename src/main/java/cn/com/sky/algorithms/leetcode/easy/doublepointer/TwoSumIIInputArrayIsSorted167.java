@@ -1,4 +1,4 @@
-package cn.com.sky.algorithms.leetcode.easy;
+package cn.com.sky.algorithms.leetcode.easy.doublepointer;
 
 import java.util.Arrays;
 
@@ -26,6 +26,9 @@ import java.util.Arrays;
  * 
  * 时间复杂度：O(n)
  * 空间复杂度：O(1)
+ *
+ *
+ * 对撞指针（左右指针相向而行）。
  * </pre>
  */
 public class TwoSumIIInputArrayIsSorted167 {

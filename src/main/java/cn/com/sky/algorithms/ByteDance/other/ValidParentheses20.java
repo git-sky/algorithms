@@ -6,29 +6,66 @@ import java.util.Stack;
 
 /**
  * LeetCode 20. 有效的括号【Easy】
- * 
+ * <p>
  * 给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串 s ，判断字符串是否有效。
- * 
+ * <p>
  * 有效字符串需满足：
  * 1. 左括号必须用相同类型的右括号闭合。
  * 2. 左括号必须以正确的顺序闭合。
- * 
+ * <p>
  * 算法原理（栈）：
  * 1. 使用栈存储左括号
  * 2. 遍历字符串：
- *    - 遇到左括号，入栈
- *    - 遇到右括号，检查栈顶是否匹配
- *    - 匹配则出栈，不匹配则返回false
+ * - 遇到左括号，入栈
+ * - 遇到右括号，检查栈顶是否匹配
+ * - 匹配则出栈，不匹配则返回false
  * 3. 最后检查栈是否为空
- * 
+ * <p>
  * 时间复杂度：O(n)
  * 空间复杂度：O(n)
  */
 public class ValidParentheses20 {
 
+
+    /**
+     * 一句话记忆法
+     * "左进栈，右弹栈，对不上就错，最后空才好"
+     */
+    public boolean isValid(String s) {
+        // ① 空字符串视为有效
+        if (s == null || s.isEmpty()) {
+            return true;
+        }
+
+        // ② 初始化栈（存左括号）和映射表（右括号 → 对应左括号）
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put('}', '{');
+        map.put(']', '[');
+
+        // ③ 遍历每个字符
+        for (char c : s.toCharArray()) {
+            if (map.containsKey(c)) {
+                // 🔴 遇到右括号：检查栈顶是否匹配。空的时候，stack.pop()会报错，所以先判空。
+                char top = stack.isEmpty() ? '#' : stack.pop();
+                if (top != map.get(c)) {
+                    return false;
+                }
+            } else {
+                // 🟢 遇到左括号：入栈
+                stack.push(c);
+            }
+        }
+
+        // ④ 遍历结束，栈必须为空才说明全部匹配
+        return stack.isEmpty();
+    }
+
+
     public static void main(String[] args) {
         ValidParentheses20 solution = new ValidParentheses20();
-        
+
         // 测试用例1：有效括号
         System.out.println("测试用例1: " + solution.isValid("()"));      // true
         // 测试用例2：多个有效括号
@@ -45,32 +82,5 @@ public class ValidParentheses20 {
         System.out.println("测试用例7: " + solution.isValid("("));       // false
         // 测试用例8：只有右括号
         System.out.println("测试用例8: " + solution.isValid(")"));       // false
-    }
-
-    public boolean isValid(String s) {
-        if (s == null || s.length() == 0) {
-            return true;
-        }
-
-        Stack<Character> stack = new Stack<>();
-        Map<Character, Character> map = new HashMap<>();
-        map.put(')', '(');
-        map.put('}', '{');
-        map.put(']', '[');
-
-        for (char c : s.toCharArray()) {
-            if (map.containsKey(c)) {
-                // 遇到右括号
-                char top = stack.isEmpty() ? '#' : stack.pop();
-                if (top != map.get(c)) {
-                    return false;
-                }
-            } else {
-                // 遇到左括号
-                stack.push(c);
-            }
-        }
-        
-        return stack.isEmpty();
     }
 }
